@@ -1,0 +1,41 @@
+{
+    "configurations": [
+        {
+            "name": "Arduino",
+            "includePath": [
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/EEPROM/",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/HID/",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/SPI/",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/SoftwareSerial/",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/Wire/",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/variants/mega/",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/compat/",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/util/",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/lib/gcc/avr/7.3.0/include/",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/lib/gcc/avr/7.3.0/include-fixed/",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/EEPROM/src",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/HID/src",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/SPI/src",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/SoftwareSerial/src",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/Wire/src",
+                "/Users/ak/Work/arduino/libraries/U8g2/src"
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ],
+            "intelliSenseMode": "macos-clang-x64",
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++98"
+        }
+    ],
+    "version": 4
+}
