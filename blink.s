@@ -9,6 +9,10 @@ E  = %10000000
 RW = %01000000
 RS = %00100000
 
+value = $0200 ; 2 bytes
+mod10 = $0202 ; 2 bytes
+message = $0204 ; 6 bytes
+
 ; === main program === 
 
     org ORIG
@@ -35,6 +39,75 @@ init:
     lda #%0000110 ; Increment and shift cursor; don't shift display
     jsr lcd_instruction
 
+; ==== start binary to dec ===
+
+binary:
+
+    ; init message to ""
+    lda #0
+    sta message
+
+    ; initialize value to be the number to convert
+    lda number
+    sta value
+    lda number + 1
+    sta value + 1
+
+divide:
+    ; initialize remainder to zero
+    lda #0
+    sta mod10
+    sta mod10 +1 
+
+    ; clear carry bit
+    clc
+
+    ; initialize x register
+    ldx #16
+
+divloop:
+    ; rotate quotient and remainder
+    rol value
+    rol value + 1
+    rol mod10
+    rol mod10 + 1
+
+    ; a,y = dividend - diviser
+    sec
+    lda mod10
+    sbc #10
+    tay ; save low byte of substraction in Y
+    lda mod10 + 1
+    sbc #0
+
+    ; if we didn't borrow (dividend < diviser), ignore the result
+    bcc ignore_result
+
+    sty mod10
+    sta mod10 + 1
+
+ignore_result:
+    dex
+    bne divloop
+
+    rol value ; shift in the last value of the quotient
+    rol value + 1
+
+    lda mod10 ; digit is in lower byte of mod10
+    
+    ; get ascii code for number
+    clc
+    adc #"0" 
+
+    ; print answer
+    jsr push_char
+
+    ; if value != 0 then continue dividing
+    lda value
+    ora value + 1
+    bne divide ; branch if value not zero
+
+
     ldx #0
 print:
     lda message,x
@@ -46,7 +119,7 @@ print:
 loop:
     jmp loop
 
-message: asciiz "Hello, world!"
+number: word 1729
 
 lcd_instruction:
     jsr lcd_wait
@@ -61,6 +134,26 @@ lcd_instruction:
     
     lda #0 ; Clear RS/RW/E bits
     sta PORTA
+
+    rts
+
+push_char: ; add the character in the A register to the beginning of the null-terminated string `message`
+    pha ; push new first char onto stack
+    ldy #0
+
+char_loop:
+    lda message,y ; get char on string and put into x
+    tax
+    pla
+    sta message,y ; pull char off stack and add it to the string
+    iny
+    txa
+    pha ; push char from string onto stack
+
+    bne char_loop ; if a is 0 then we reached the end of the string
+
+    pla
+    sta message,y ; pull the null terminator off the stack and add it at the end
 
     rts
 
