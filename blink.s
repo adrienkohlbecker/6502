@@ -1,13 +1,24 @@
+// Memory Map
+// 
+// 0000 0000 0000 0000 - 0000 0000 1111 1111 | 0000 - 00FF | Zero page
+// 0000 0000 0001 0000 - 0000 0001 1111 1111 | 0100 - 01FF | Stack
+// 0000 0000 0010 0000 - 0111 1111 0111 1111 | 0200 - 7F7F | RAM
+// 0111 1111 1000 0000 - 0111 1111 1111 1111 | 0780 - 07FF | I/O
+
+// I/O:
+// 
+// 0111 1111 1000 0000 - 0111 1111 1000 1111 | 0780 - 078F | 65C22 #1
+
 ORIG=$8000 ; Address of first ROM byte
 VECTOR=$fffa ; Address of vector locations
-DDRA=$6003 ; Address of data direction register for PORT A
-DDRB=$6002 ; Address of data direction register for PORT B
-PORTA=$6001 ; Address of PORT A
-PORTB=$6000 ; Address of PORT B
-IFR=$600d ; Address of interupt flag register
-IER=$600e ; Address of interupt enable register
+DDRA=$7f83 ; Address of data direction register for PORT A
+DDRB=$7f82 ; Address of data direction register for PORT B
+PORTA=$7f81 ; Address of PORT A
+PORTB=$7f80 ; Address of PORT B
+IFR=$7f8d ; Address of interupt flag register
+IER=$7f8e ; Address of interupt enable register
 
-PCR=$600c ; Address of peripheral control register
+PCR=$7ffc ; Address of peripheral control register
 
 E  = %10000000
 RW = %01000000
