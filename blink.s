@@ -1,9 +1,13 @@
 ORIG=$8000 ; Address of first ROM byte
-RESET=$fffc ; Address of reset vector
+VECTOR=$fffa ; Address of vector locations
 DDRA=$6003 ; Address of data direction register for PORT A
 DDRB=$6002 ; Address of data direction register for PORT B
 PORTA=$6001 ; Address of PORT A
 PORTB=$6000 ; Address of PORT B
+IFR=$600d ; Address of interupt flag register
+IER=$600e ; Address of interupt enable register
+
+PCR=$600c ; Address of peripheral control register
 
 E  = %10000000
 RW = %01000000
@@ -12,6 +16,7 @@ RS = %00100000
 value = $0200 ; 2 bytes
 mod10 = $0202 ; 2 bytes
 message = $0204 ; 6 bytes
+counter = $020a ; 2 bytes
 
 ; === main program === 
 
@@ -21,8 +26,16 @@ init:
     ldx #$ff ; initialize stack pointer to 01FF
     txs
 
-    lda #%11111111 ; Set all pins of PORTB to output
-    sta DDRB
+    cli ; enable interrupt handling
+
+    lda #%10000010 ; enable interrupt on CA1
+    sta IER
+
+    lda #%10000010 ; enable interrupt on CA1
+    sta IER
+
+    lda #%00000000 ; Set CA1 to negative going edge
+    sta PCR
 
     lda #%11100000 ; Set top 3 pins of PORTA to output
     sta DDRA
@@ -39,18 +52,25 @@ init:
     lda #%0000110 ; Increment and shift cursor; don't shift display
     jsr lcd_instruction
 
-; ==== start binary to dec ===
+; ==== start printing counter ===
 
-binary:
+    lda #0
+    sta counter
+    sta counter + 1
+
+loop:
+
+    lda #%00000010 ; Set cursor to home
+    jsr lcd_instruction
 
     ; init message to ""
     lda #0
     sta message
 
     ; initialize value to be the number to convert
-    lda number
+    lda counter
     sta value
-    lda number + 1
+    lda counter + 1
     sta value + 1
 
 divide:
@@ -115,9 +135,6 @@ print:
     jsr print_char
     inx
     jmp print
-
-loop:
-    jmp loop
 
 number: word 1729
 
@@ -200,11 +217,20 @@ lcd_wait_loop:
     pla
     rts
 
-; === reset vector ===
+nmi:
+    rti
 
-    org RESET
+irq: 
+    inc counter
+    bne exit_irq
+    inc counter + 1
+exit_irq:
+    bit PORTA ; read PORTA, to clear the interrupt, and update status flags. Ok because processor resets status after exiting an interrupt
+    rti
+
+; === vector locations ===
+
+    org VECTOR
+    word nmi
     word init
-
-; === final padding ===
-
-    word $eaea
+    word irq
