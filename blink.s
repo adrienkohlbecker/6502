@@ -1,24 +1,27 @@
-// Memory Map
-// 
-// 0000 0000 0000 0000 - 0000 0000 1111 1111 | 0000 - 00FF | Zero page
-// 0000 0000 0001 0000 - 0000 0001 1111 1111 | 0100 - 01FF | Stack
-// 0000 0000 0010 0000 - 0111 1111 0111 1111 | 0200 - 7F7F | RAM
-// 0111 1111 1000 0000 - 0111 1111 1111 1111 | 0780 - 07FF | I/O
+; Memory Map
+; 
+; 0000 0000 0000 0000 - 0000 0000 1111 1111 | 0000 - 00FF | Zero page
+; 0000 0000 0001 0000 - 0000 0001 1111 1111 | 0100 - 01FF | Stack
+; 0000 0000 0010 0000 - 0111 1111 1011 1111 | 0200 - 7FBF | RAM
+; 0111 1111 1100 0000 - 0111 1111 1111 1111 | 7FC0 - 07FF | I/O
 
-// I/O:
-// 
-// 0111 1111 1000 0000 - 0111 1111 1000 1111 | 0780 - 078F | 65C22 #1
+; I/O:
+; 
+; 0111 1111 1100 0000 - 0111 1111 1100 1111 | 7FC0 - 7FCF | I/O #1
+; 0111 1111 1101 0000 - 0111 1111 1101 1111 | 7FD0 - 7FDF | I/O #2
+; 0111 1111 1110 0000 - 0111 1111 1110 1111 | 7FE0 - 7FEF | I/O #3
+; 0111 1111 1111 0000 - 0111 1111 1111 1111 | 7FF0 - 7FFF | I/O #4
 
 ORIG=$8000 ; Address of first ROM byte
 VECTOR=$fffa ; Address of vector locations
-DDRA=$7f83 ; Address of data direction register for PORT A
-DDRB=$7f82 ; Address of data direction register for PORT B
-PORTA=$7f81 ; Address of PORT A
-PORTB=$7f80 ; Address of PORT B
-IFR=$7f8d ; Address of interupt flag register
-IER=$7f8e ; Address of interupt enable register
+DDRA=$7FC3 ; Address of data direction register for PORT A
+DDRB=$7FC2 ; Address of data direction register for PORT B
+PORTA=$7FC1 ; Address of PORT A
+PORTB=$7FC0 ; Address of PORT B
+IFR=$7FCD ; Address of interupt flag register
+IER=$7FCE ; Address of interupt enable register
 
-PCR=$7ffc ; Address of peripheral control register
+PCR=$7FCC ; Address of peripheral control register
 
 E  = %10000000
 RW = %01000000
