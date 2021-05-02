@@ -43,7 +43,7 @@ init:
     cli ; enable interrupt handling
 
     lda #%10000010 ; enable interrupt on CA1
-    sta IER
+    sta IFR
 
     lda #%10000010 ; enable interrupt on CA1
     sta IER
