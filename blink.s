@@ -48,17 +48,20 @@ init:
 
     cli ; enable interrupt handling
 
-    lda #%10000010 ; enable interrupt on CA1
-    sta IO_1_IFR
+    lda #%10010000 ; enable interrupt on CB1
+    sta IO_2_IFR
 
-    lda #%10000010 ; enable interrupt on CA1
-    sta IO_1_IER
+    lda #%10010000 ; enable interrupt on CB1
+    sta IO_2_IER
 
-    lda #%00000000 ; Set CA1 to negative going edge
-    sta IO_1_PCR
+    lda #%00010000 ; Set CB1 to positive going edge
+    sta IO_2_PCR
 
     lda #%11100000 ; Set top 3 pins of IO_1_PORTA to output
     sta IO_1_DDRA
+
+    lda #%00000000 ; Set all pins of IO_2_PORTB to input
+    sta IO_2_DDRB
 
     lda #%00000001 ; Clear display
     jsr lcd_instruction
@@ -245,7 +248,7 @@ irq:
     bne exit_irq
     inc counter + 1
 exit_irq:
-    bit IO_1_PORTA ; read IO_1_PORTA, to clear the interrupt, and update status flags. Ok because processor resets status after exiting an interrupt
+    bit IO_2_PORTB ; read IO_2_PORTB, to clear the interrupt, and update status flags. Ok because processor resets status after exiting an interrupt
     rti
 
 ; === vector locations ===
