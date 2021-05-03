@@ -244,11 +244,10 @@ nmi:
     rti
 
 irq: 
-    inc counter
-    bne exit_irq
-    inc counter + 1
-exit_irq:
-    bit IO_2_PORTB ; read IO_2_PORTB, to clear the interrupt, and update status flags. Ok because processor resets status after exiting an interrupt
+    pha
+    lda IO_2_PORTB
+    sta counter
+    pla
     rti
 
 ; === vector locations ===
