@@ -14,14 +14,20 @@
 
 ORIG=$8000 ; Address of first ROM byte
 VECTOR=$fffa ; Address of vector locations
-DDRA=$7FC3 ; Address of data direction register for PORT A
-DDRB=$7FC2 ; Address of data direction register for PORT B
-PORTA=$7FC1 ; Address of PORT A
-PORTB=$7FC0 ; Address of PORT B
-IFR=$7FCD ; Address of interupt flag register
-IER=$7FCE ; Address of interupt enable register
-
-PCR=$7FCC ; Address of peripheral control register
+IO_1_DDRA=$7FC3 ; Address of data direction register for PORT A
+IO_1_DDRB=$7FC2 ; Address of data direction register for PORT B
+IO_1_PORTA=$7FC1 ; Address of PORT A
+IO_1_PORTB=$7FC0 ; Address of PORT B
+IO_1_IFR=$7FCD ; Address of interupt flag register
+IO_1_IER=$7FCE ; Address of interupt enable register
+IO_1_PCR=$7FCC ; Address of peripheral control register
+IO_2_DDRA=$7FD3 ; Address of data direction register for PORT A
+IO_2_DDRB=$7FD2 ; Address of data direction register for PORT B
+IO_2_PORTA=$7FD1 ; Address of PORT A
+IO_2_PORTB=$7FD0 ; Address of PORT B
+IO_2_IFR=$7FDD ; Address of interupt flag register
+IO_2_IER=$7FDE ; Address of interupt enable register
+IO_2_PCR=$7FDC ; Address of peripheral control register
 
 E  = %10000000
 RW = %01000000
@@ -43,16 +49,16 @@ init:
     cli ; enable interrupt handling
 
     lda #%10000010 ; enable interrupt on CA1
-    sta IFR
+    sta IO_1_IFR
 
     lda #%10000010 ; enable interrupt on CA1
-    sta IER
+    sta IO_1_IER
 
     lda #%00000000 ; Set CA1 to negative going edge
-    sta PCR
+    sta IO_1_PCR
 
-    lda #%11100000 ; Set top 3 pins of PORTA to output
-    sta DDRA
+    lda #%11100000 ; Set top 3 pins of IO_1_PORTA to output
+    sta IO_1_DDRA
 
     lda #%00000001 ; Clear display
     jsr lcd_instruction
@@ -155,16 +161,16 @@ number: word 1729
 lcd_instruction:
     jsr lcd_wait
 
-    sta PORTB
+    sta IO_1_PORTB
     
     lda #0 ; Clear RS/RW/E bits
-    sta PORTA
+    sta IO_1_PORTA
 
     lda #E  ; Set the Enable bit to send the instruction
-    sta PORTA
+    sta IO_1_PORTA
     
     lda #0 ; Clear RS/RW/E bits
-    sta PORTA
+    sta IO_1_PORTA
 
     rts
 
@@ -191,16 +197,16 @@ char_loop:
 print_char:
     jsr lcd_wait
 
-    sta PORTB
+    sta IO_1_PORTB
     
     lda #RS ; Clear RW/E bits; Set RS
-    sta PORTA
+    sta IO_1_PORTA
 
     lda #(RS | E)  ; Set the Enable bit + Register select to send the data
-    sta PORTA
+    sta IO_1_PORTA
     
     lda #0 ; Clear RS/RW/E bits
-    sta PORTA
+    sta IO_1_PORTA
 
     rts
 
@@ -208,25 +214,25 @@ lcd_wait:
     pha
 
     lda #%00000000 ; PORT B is input
-    sta DDRB
+    sta IO_1_DDRB
 
     lda #RW ; Clear RS/E bits; Set RW
-    sta PORTA
+    sta IO_1_PORTA
 
     lda #(RW | E)  ; Set the Enable bit + RW to read the data
-    sta PORTA
+    sta IO_1_PORTA
 
 lcd_wait_loop:    
-    lda PORTB
+    lda IO_1_PORTB
 
     and #%10000000 ; Get only value of busy flag
     bne lcd_wait_loop
 
     lda #0 ; Clear RS/RW/E bits
-    sta PORTA
+    sta IO_1_PORTA
 
     lda #%11111111 ; PORT B is output
-    sta DDRB
+    sta IO_1_DDRB
 
     pla
     rts
@@ -239,7 +245,7 @@ irq:
     bne exit_irq
     inc counter + 1
 exit_irq:
-    bit PORTA ; read PORTA, to clear the interrupt, and update status flags. Ok because processor resets status after exiting an interrupt
+    bit IO_1_PORTA ; read IO_1_PORTA, to clear the interrupt, and update status flags. Ok because processor resets status after exiting an interrupt
     rti
 
 ; === vector locations ===
