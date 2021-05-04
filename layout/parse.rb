@@ -24,7 +24,7 @@ def parse(file, keycodes_to_keys)
             print "\n"
         end
         key = keycodes_to_keys.fetch(i,0)
-        char = keys_to_chars.fetch(key, 0x3f)
+        char = keys_to_chars.fetch(key, 0x00)
         buffer << char
         print char.chr.force_encoding(Encoding::ISO_8859_1)
     end

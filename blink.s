@@ -40,7 +40,8 @@ kb_rptr = $0001
 kb_flags = $0002
 
 RELEASE = %00000001
-SHIFT = %000000010
+SHIFT_LEFT = %00000010
+SHIFT_RIGHT = %00000100
 
 
 ; === main program ===
@@ -74,7 +75,7 @@ init:
     lda #%00111000 ; Set 8 bit mode, 2 line display, 5x8 font
     jsr lcd_instruction
 
-    lda #%0001110 ; Set display ON, cursor ON, blink OFF
+    lda #%0001111 ; Set display ON, cursor ON, blink ON
     jsr lcd_instruction
 
     lda #%0000110 ; Increment and shift cursor; don't shift display
@@ -116,7 +117,7 @@ lcd_instruction:
 
     rts
 
-print_char:
+lcd_data:
     jsr lcd_wait
 
     sta IO_1_PORTB
@@ -132,9 +133,54 @@ print_char:
 
     rts
 
-lcd_wait: 
-    pha
+print_char:
+    cmp #$00 ; ignore non supported keys
+    beq exit_print_char
 
+    cmp #$1B ; escape
+    beq clear_screen
+
+    cmp #$08 ; backspace
+    beq backspace
+
+    cmp #$0a ; line feed
+    beq line_feed
+
+    jsr lcd_data
+    rts
+
+exit_print_char:
+    rts
+
+clear_screen:
+    lda #%00000001 ; Clear display
+    jsr lcd_instruction
+    rts
+
+backspace:
+    lda #%00010000 ; shift cursor left
+    jsr lcd_instruction
+
+    lda #$20 ; space
+    jsr lcd_data
+
+    lda #%00010000 ; shift cursor left
+    jsr lcd_instruction
+
+    rts
+
+line_feed:
+    jsr lcd_read_address ; note, this will clear our line feed from the A register
+    and #%01000000 ; check value of higher order addres bit; 1 means we're in the second line
+    bne exit_line_feed ; if we're already on the second line, ignore
+
+    lda #%11000000 ; set address to 40 = first char in second line
+    jsr lcd_instruction
+
+exit_line_feed:
+    rts
+
+lcd_read_address:
     lda #%00000000 ; PORT B is input
     sta IO_1_DDRB
 
@@ -144,9 +190,33 @@ lcd_wait:
     lda #(RW | E)  ; Set the Enable bit + RW to read the data
     sta IO_1_PORTA
 
-lcd_wait_loop:    
     lda IO_1_PORTB
+    pha
 
+    lda #0 ; Clear RS/RW/E bits
+    sta IO_1_PORTA
+
+    lda #%11111111 ; PORT B is output
+    sta IO_1_DDRB
+
+    pla
+    rts
+
+
+lcd_wait:
+    pha
+
+    lda #%00000000 ; PORT B is input
+    sta IO_1_DDRB
+
+lcd_wait_loop:
+    lda #RW ; Clear RS/E bits; Set RW
+    sta IO_1_PORTA
+
+    lda #(RW | E)  ; Set the Enable bit + RW to read the data
+    sta IO_1_PORTA
+
+    lda IO_1_PORTB
     and #%10000000 ; Get only value of busy flag
     bne lcd_wait_loop
 
@@ -177,9 +247,9 @@ irq:
 
     lda IO_2_PORTB ; read key that's being released
     cmp #$12
-    beq shift_up
+    beq shift_left_up
     cmp #$59
-    beq shift_up
+    beq shift_right_up
 
     jmp exit_irq
 
@@ -192,14 +262,18 @@ read_key:
     cmp #$f0        ; if the scan code is key release
     beq key_release ; set release flag
 
-    cmp #$12 
-    beq shift_down
+    cmp #$12
+    beq shift_left_down
     cmp #$59
-    beq shift_down
-    
-    tax 
+    beq shift_right_down
+
+    tax
     lda kb_flags
-    and #SHIFT
+    and #SHIFT_LEFT
+    bne shifted_key
+
+    lda kb_flags
+    and #SHIFT_RIGHT
     bne shifted_key
 
     lda keymap, x ; convert scancode to char
@@ -215,15 +289,27 @@ push_key
 
     jmp exit_irq
 
-shift_down:
+shift_left_down:
     lda kb_flags
-    ora #SHIFT
+    ora #SHIFT_LEFT
     sta kb_flags
     jmp exit_irq
 
-shift_up:
+shift_left_up:
     lda kb_flags
-    eor #SHIFT ; flip the shift bit
+    eor #SHIFT_LEFT ; flip the shift bit
+    sta kb_flags
+    jmp exit_irq
+
+shift_right_down:
+    lda kb_flags
+    ora #SHIFT_RIGHT
+    sta kb_flags
+    jmp exit_irq
+
+shift_right_up:
+    lda kb_flags
+    eor #SHIFT_RIGHT ; flip the shift bit
     sta kb_flags
     jmp exit_irq
 

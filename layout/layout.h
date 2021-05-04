@@ -13,6 +13,9 @@
 // #define DEADKEY_TILDE           KEY_2 + ALTGR_MASK
 
 
+#define ASCII_08        KEY_BACKSPACE                           // 08 backspace
+#define ASCII_0A        KEY_ENTER                               // 10 line feed
+#define ASCII_1B        KEY_ESC                                 // 27 escape
 #define ASCII_20        KEY_SPACE                               // 32
 #define ASCII_21        KEY_SLASH                               // 33 !
 #define ASCII_22        KEY_3                                   // 34 "
@@ -108,7 +111,6 @@
 #define ASCII_7C        KEY_6 + ALTGR_MASK                      // 124 |
 #define ASCII_7D        KEY_EQUAL + ALTGR_MASK                  // 125 }
 #define ASCII_7E        TILDE_BITS + KEY_SPACE                  // 126 ~
-#define ASCII_7F        KEY_BACKSPACE                           // 127
 #define ISO_8859_1_A0   0                                       // 160       Nonbreakng Space
 #define ISO_8859_1_A1   0                                       // 161 ¡     Inverted Exclamation
 #define ISO_8859_1_A2   0                                       // 162 ¢     Cent SIGN
