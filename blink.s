@@ -33,10 +33,15 @@ E  = %10000000
 RW = %01000000
 RS = %00100000
 
-value = $0200 ; 2 bytes
-mod10 = $0202 ; 2 bytes
-message = $0204 ; 6 bytes
-counter = $020a ; 2 bytes
+kb_buffer = $0200 ; 256-byte keyboard buffer 0200-02ff
+
+kb_wptr = $0000
+kb_rptr = $0001
+kb_flags = $0002
+
+RELEASE = %00000001
+SHIFT = %000000010
+
 
 ; === main program === 
 
@@ -75,91 +80,25 @@ init:
     lda #%0000110 ; Increment and shift cursor; don't shift display
     jsr lcd_instruction
 
-; ==== start printing counter ===
-
-    lda #0
-    sta counter
-    sta counter + 1
+    lda #$00 ; initialize keyboard pointers to 0
+    sta kb_wptr
+    sta kb_rptr
+    sta kb_flags
 
 loop:
+    sei         ; pointers are set in interrupt, briefly disable interrupts while we read them
+    lda kb_rptr 
+    cmp kb_wptr
+    cli         ; re-enable interrupts
+    bne key_pressed ; if the two pointers aren't equal, some key must have been pressed
+    jmp loop
 
-    lda #%00000010 ; Set cursor to home
-    jsr lcd_instruction
-
-    ; init message to ""
-    lda #0
-    sta message
-
-    ; initialize value to be the number to convert
-    lda counter
-    sta value
-    lda counter + 1
-    sta value + 1
-
-divide:
-    ; initialize remainder to zero
-    lda #0
-    sta mod10
-    sta mod10 +1 
-
-    ; clear carry bit
-    clc
-
-    ; initialize x register
-    ldx #16
-
-divloop:
-    ; rotate quotient and remainder
-    rol value
-    rol value + 1
-    rol mod10
-    rol mod10 + 1
-
-    ; a,y = dividend - diviser
-    sec
-    lda mod10
-    sbc #10
-    tay ; save low byte of substraction in Y
-    lda mod10 + 1
-    sbc #0
-
-    ; if we didn't borrow (dividend < diviser), ignore the result
-    bcc ignore_result
-
-    sty mod10
-    sta mod10 + 1
-
-ignore_result:
-    dex
-    bne divloop
-
-    rol value ; shift in the last value of the quotient
-    rol value + 1
-
-    lda mod10 ; digit is in lower byte of mod10
-    
-    ; get ascii code for number
-    clc
-    adc #"0" 
-
-    ; print answer
-    jsr push_char
-
-    ; if value != 0 then continue dividing
-    lda value
-    ora value + 1
-    bne divide ; branch if value not zero
-
-
-    ldx #0
-print:
-    lda message,x
-    beq loop ; exit if zero flag is set; we're at end of null-terminated string
+key_pressed:
+    ldx kb_rptr
+    lda kb_buffer, x
     jsr print_char
-    inx
-    jmp print
-
-number: word 1729
+    inc kb_rptr
+    jmp loop
 
 lcd_instruction:
     jsr lcd_wait
@@ -174,26 +113,6 @@ lcd_instruction:
     
     lda #0 ; Clear RS/RW/E bits
     sta IO_1_PORTA
-
-    rts
-
-push_char: ; add the character in the A register to the beginning of the null-terminated string `message`
-    pha ; push new first char onto stack
-    ldy #0
-
-char_loop:
-    lda message,y ; get char on string and put into x
-    tax
-    pla
-    sta message,y ; pull char off stack and add it to the string
-    iny
-    txa
-    pha ; push char from string onto stack
-
-    bne char_loop ; if a is 0 then we reached the end of the string
-
-    pla
-    sta message,y ; pull the null terminator off the stack and add it at the end
 
     rts
 
@@ -245,10 +164,83 @@ nmi:
 
 irq: 
     pha
-    lda IO_2_PORTB
-    sta counter
+    txa
+    pha
+
+    lda kb_flags
+    and #RELEASE ; if releasing a key
+    beq read_key
+
+    lda kb_flags
+    eor #RELEASE  ; reset the releasing bit
+    sta kb_flags
+
+    lda IO_2_PORTB ; read key that's being released
+    cmp #$12
+    beq shift_up
+    cmp #$59
+    beq shift_up
+
+    jmp exit_irq
+
+read_key:
+    lda IO_2_PORTB ; read scan code into A register
+
+    cmp #$aa        ; if the scan code is  BAT (Basic Assurance Test) OK  https://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html#ss1.2
+    beq exit_irq    ; ignore it
+
+    cmp #$f0        ; if the scan code is key release
+    beq key_release ; set release flag
+
+    cmp #$12 
+    beq shift_down
+    cmp #$59
+    beq shift_down
+    
+    tax 
+    lda kb_flags
+    and #SHIFT
+    bne shifted_key
+
+    lda keymap, x ; convert scancode to char
+    jmp push_key
+
+shifted_key:
+    lda keymap_shifted, x ; convert scancode to char with shift
+
+push_key
+    ldx kb_wptr    ; write scancode in the buffer at offset kb_wptr
+    sta kb_buffer, x
+    inc kb_wptr    ; increment pointer
+
+    jmp exit_irq
+
+shift_down:
+    lda kb_flags
+    ora #SHIFT
+    sta kb_flags
+    jmp exit_irq
+
+shift_up:
+    lda kb_flags
+    eor #SHIFT ; flip the shift bit
+    sta kb_flags
+    jmp exit_irq
+
+key_release:
+    lda kb_flags
+    ora #RELEASE
+    sta kb_flags
+
+exit_irq:
+    pla
+    tax
     pla
     rti
+
+    org $fd00
+keymap: incbin "layout/keys_unshifted.bin"
+keymap_shifted: incbin "layout/keys_shifted.bin"
 
 ; === vector locations ===
 
