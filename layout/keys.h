@@ -13,8 +13,8 @@
 #define KEY_0                   ( 0x45 | 0xF000 )    // Keyboard 0 and )
 #define KEY_MINUS               ( 0x4E | 0xF000 )    // Keyboard - and (underscore)
 #define KEY_EQUAL               ( 0x55 | 0xF000 )    // Keyboard = and +
-#define KEY_BACKSPACE           ( 0x66 | 0xF000 )	
-#define KEY_TAB                 ( 0x0D | 0xF000 )	
+#define KEY_BACKSPACE           ( 0x66 | 0xF000 )
+#define KEY_TAB                 ( 0x0D | 0xF000 )
 #define KEY_Q                   ( 0x15 | 0xF000 )    // Keyboard q and Q
 #define KEY_W                   ( 0x1D | 0xF000 )    // Keyboard w and W
 #define KEY_E                   ( 0x24 | 0xF000 )    // Keyboard e and E
@@ -51,9 +51,9 @@
 #define KEY_COMMA               ( 0x41 | 0xF000 )    // Keyboard , and <
 #define KEY_PERIOD              ( 0x49 | 0xF000 )    // Keyboard . and >
 #define KEY_SLASH               ( 0x4A | 0xF000 )    // Keyboard / and ?
-#define MODIFIERKEY_RIGHT_SHIFT ( 0x59 | 0xF000 )	
-#define MODIFIERKEY_LEFT_CTRL   ( 0x14 | 0xF000 )	
-#define MODIFIERKEY_LEFT_ALT    ( 0x11 | 0xF000 )	
+#define MODIFIERKEY_RIGHT_SHIFT ( 0x59 | 0xF000 )
+#define MODIFIERKEY_LEFT_CTRL   ( 0x14 | 0xF000 )
+#define MODIFIERKEY_LEFT_ALT    ( 0x11 | 0xF000 )
 #define KEY_SPACE               ( 0x29 | 0xF000 )
 #define KEY_NUM_LOCK            ( 0x77 | 0xF000 )
 #define KEYPAD_7                ( 0x6C | 0xF000 )    // Keypad 7 and Home
@@ -62,35 +62,35 @@
 #define KEYPAD_8                ( 0x75 | 0xF000 )    // Keypad 8 and Up Arrow
 #define KEYPAD_5                ( 0x73 | 0xF000 )
 #define KEYPAD_2                ( 0x72 | 0xF000 )    // Keypad 2 and Down Arrow
-#define KEYPAD_0                ( 0x70 | 0xF000 )    // Keypad 0 and Insert	
+#define KEYPAD_0                ( 0x70 | 0xF000 )    // Keypad 0 and Insert
 #define KEYPAD_ASTERIX          ( 0x7C | 0xF000 )
 #define KEYPAD_9                ( 0x7D | 0xF000 )    // Keypad 9 and PageUp
 #define KEYPAD_6                ( 0x74 | 0xF000 )    // Keypad 6 and Right Arrow
-#define KEYPAD_3                ( 0x7A | 0xF000 )    // Keypad 3 and PageDn	
+#define KEYPAD_3                ( 0x7A | 0xF000 )    // Keypad 3 and PageDn
 #define KEYPAD_PERIOD           ( 0x71 | 0xF000 )    // Keypad . and Delete
 #define KEYPAD_MINUS            ( 0x7B | 0xF000 )
 #define KEYPAD_PLUS             ( 0x79 | 0xF000 )
-#define KEY_ESC                 ( 0x76 | 0xF000 )	
-#define KEY_F1                  ( 0x05 | 0xF000 )	
-#define KEY_F2                  ( 0x06 | 0xF000 )	
-#define KEY_F3                  ( 0x04 | 0xF000 )	
-#define KEY_F4                  ( 0x0C | 0xF000 )	
-#define KEY_F5                  ( 0x03 | 0xF000 )	
-#define KEY_F6                  ( 0x0B | 0xF000 )	
-#define KEY_F7                  ( 0x83 | 0xF000 )	
-#define KEY_F8                  ( 0x0A | 0xF000 )	
-#define KEY_F9                  ( 0x01 | 0xF000 )	
-#define KEY_F10                 ( 0x09 | 0xF000 )	
-#define KEY_F11                 ( 0x78 | 0xF000 )	
-#define KEY_F12                 ( 0x07 | 0xF000 )	
+#define KEY_ESC                 ( 0x76 | 0xF000 )
+#define KEY_F1                  ( 0x05 | 0xF000 )
+#define KEY_F2                  ( 0x06 | 0xF000 )
+#define KEY_F3                  ( 0x04 | 0xF000 )
+#define KEY_F4                  ( 0x0C | 0xF000 )
+#define KEY_F5                  ( 0x03 | 0xF000 )
+#define KEY_F6                  ( 0x0B | 0xF000 )
+#define KEY_F7                  ( 0x83 | 0xF000 )
+#define KEY_F8                  ( 0x0A | 0xF000 )
+#define KEY_F9                  ( 0x01 | 0xF000 )
+#define KEY_F10                 ( 0x09 | 0xF000 )
+#define KEY_F11                 ( 0x78 | 0xF000 )
+#define KEY_F12                 ( 0x07 | 0xF000 )
 #define KEY_SCROLL_LOCK         ( 0x7E | 0xF000 )
 #define KEY_BACKSLASH           ( 0x5D | 0xF000 )    // Keyboard \ and | - if not existent, the code of the left of return key (Non-US # and ~)
 #define KEY_NON_US_BS           ( 0x61 | 0xF000 )    // Keypad Non-US \ and | - bottom left
 
 #define MODIFIERKEY_RIGHT_ALT   ( 0x11 | 0xE000 )
 #define MODIFIERKEY_RIGHT_CTRL  ( 0x14 | 0xE000 )
-#define KEY_INSERT              ( 0x70 | 0xE000 )	
-#define KEY_DELETE              ( 0x71 | 0xE000 )	
+#define KEY_INSERT              ( 0x70 | 0xE000 )
+#define KEY_DELETE              ( 0x71 | 0xE000 )
 #define KEY_LEFT                ( 0x6B | 0xE000 )
 #define KEY_HOME                ( 0x6C | 0xE000 )
 #define KEY_END                 ( 0x69 | 0xE000 )

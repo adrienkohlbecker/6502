@@ -1,12 +1,12 @@
 ; Memory Map
-; 
+;
 ; 0000 0000 0000 0000 - 0000 0000 1111 1111 | 0000 - 00FF | Zero page
 ; 0000 0000 0001 0000 - 0000 0001 1111 1111 | 0100 - 01FF | Stack
 ; 0000 0000 0010 0000 - 0111 1111 1011 1111 | 0200 - 7FBF | RAM
 ; 0111 1111 1100 0000 - 0111 1111 1111 1111 | 7FC0 - 07FF | I/O
 
 ; I/O:
-; 
+;
 ; 0111 1111 1100 0000 - 0111 1111 1100 1111 | 7FC0 - 7FCF | I/O #1
 ; 0111 1111 1101 0000 - 0111 1111 1101 1111 | 7FD0 - 7FDF | I/O #2
 ; 0111 1111 1110 0000 - 0111 1111 1110 1111 | 7FE0 - 7FEF | I/O #3
@@ -43,7 +43,7 @@ RELEASE = %00000001
 SHIFT = %000000010
 
 
-; === main program === 
+; === main program ===
 
     org ORIG
 
@@ -87,7 +87,7 @@ init:
 
 loop:
     sei         ; pointers are set in interrupt, briefly disable interrupts while we read them
-    lda kb_rptr 
+    lda kb_rptr
     cmp kb_wptr
     cli         ; re-enable interrupts
     bne key_pressed ; if the two pointers aren't equal, some key must have been pressed
@@ -104,13 +104,13 @@ lcd_instruction:
     jsr lcd_wait
 
     sta IO_1_PORTB
-    
+
     lda #0 ; Clear RS/RW/E bits
     sta IO_1_PORTA
 
     lda #E  ; Set the Enable bit to send the instruction
     sta IO_1_PORTA
-    
+
     lda #0 ; Clear RS/RW/E bits
     sta IO_1_PORTA
 
@@ -120,13 +120,13 @@ print_char:
     jsr lcd_wait
 
     sta IO_1_PORTB
-    
+
     lda #RS ; Clear RW/E bits; Set RS
     sta IO_1_PORTA
 
     lda #(RS | E)  ; Set the Enable bit + Register select to send the data
     sta IO_1_PORTA
-    
+
     lda #0 ; Clear RS/RW/E bits
     sta IO_1_PORTA
 
@@ -162,7 +162,7 @@ lcd_wait_loop:
 nmi:
     rti
 
-irq: 
+irq:
     pha
     txa
     pha

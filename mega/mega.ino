@@ -3,7 +3,7 @@
 #include <SPI.h>
 #include <Wire.h>
 
-U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0); 
+U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0);
 
 const char ADDR[] = {22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52};
 const char DATA[] = {39, 41, 43, 45, 47, 49, 51, 53};
@@ -12,7 +12,7 @@ const char DATA[] = {39, 41, 43, 45, 47, 49, 51, 53};
 
 void setup() {
    u8g2.begin();
-   
+
   for (int n = 0; n < 16; n += 1) {
     pinMode(ADDR[n], INPUT);
   }
@@ -23,7 +23,7 @@ void setup() {
   pinMode(READ_WRITE, INPUT);
 
   attachInterrupt(digitalPinToInterrupt(CLOCK), onClock, RISING);
-  
+
   Serial.begin(57600);
 }
 
@@ -32,10 +32,10 @@ volatile unsigned int data = 0;
 volatile unsigned int rw = 0;
 volatile bool triggered = false;
 
-void onClock() {  
+void onClock() {
   data = 0;
   address = 0;
-  
+
   for (int n = 0; n < 16; n += 1) {
     int bit = digitalRead(ADDR[n]) ? 1 : 0;
     address = (address << 1) + bit;
@@ -56,7 +56,7 @@ String isr_log[4] = {"", "", "", ""};
 void loop() {
   if (triggered) {
     char output[9];
-    
+
     noInterrupts();
     triggered = false;
     sprintf(output, "%04x %c %02x", address,  rw ? 'r' : 'W', data);
