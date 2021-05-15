@@ -1,0 +1,22 @@
+GAL16V8
+Video H sync generator
+
+Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 Q8 GND
+NC NC RESET DISPEND SYNCSTRT SYNCEND DISPLAY HSYNC NC VCC
+
+; Count up to 200 = 11001000
+DISPEND = /Q0 * /Q1 * /Q2 * Q3 * /Q4 * /Q5 * Q6 * Q7
+
+; Count up to 210 = 11010010
+SYNCSTRT = /Q0 * Q1 * /Q2 * /Q3 * Q4 * /Q5 * Q6 * Q7
+
+; Count up to 242 = 11110010
+SYNCEND = /Q0 * Q1 * /Q2 * /Q3 * Q4 * Q5 * Q6 * Q7
+
+; Count up to 264 = 100001000
+/RESET = /Q0 * /Q1 * /Q2 * Q3 * /Q4 * /Q5 * /Q6 * /Q7 * Q8
+
+DISPLAY = /RESET + DISPLAY * /DISPEND
+HSYNC = SYNCSTRT + HSYNC * /SYNCEND
+
+DESCRIPTION
