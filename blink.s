@@ -33,7 +33,7 @@ E  = %10000000
 RW = %01000000
 RS = %00100000
 
-kb_buffer = $0200 ; 256-byte keyboard buffer 0200-02ff
+kb_buffer = $0600 ; 256-byte keyboard buffer 0200-02ff
 
 kb_wptr = $0000
 kb_rptr = $0001
