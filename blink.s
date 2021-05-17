@@ -33,6 +33,7 @@ E  = %10000000 ; LCD Enable
 RW = %01000000 ; LCD RW
 RS = %00100000 ; LCD register select
 KBS = %00010000 ; keyboard shift register
+KB_VALID = %00001000 ; keyboard packet valid input
 
 kb_buffer = $0600 ; 256-byte keyboard buffer 0200-02ff
 
@@ -269,11 +270,18 @@ irq:
     lda IO_2_PORTB ; read scan code into A register
     pha
 
+    lda IO_2_PORTA ; read if the packet is valid
+    pha
+
     lda #%00000000 ; disable shift register output
     sta IO_2_PORTA
 
     lda #%11111111 ; PORT B is output
     sta IO_2_DDRB
+
+    pla
+    and #KB_VALID
+    beq invalid_packet
 
     lda kb_flags
     and #RELEASE ; if releasing a key
@@ -316,6 +324,11 @@ read_key:
     bne shifted_key
 
     lda keymap, x ; convert scancode to char
+    jmp push_key
+
+invalid_packet:
+    pla ; get scancode from stack
+    lda #$a4 ; write ¤ to signify an invalid packet was received
     jmp push_key
 
 shifted_key:
