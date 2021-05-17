@@ -29,9 +29,9 @@ IO_2_IFR=$7FDD ; Address of interupt flag register
 IO_2_IER=$7FDE ; Address of interupt enable register
 IO_2_PCR=$7FDC ; Address of peripheral control register
 
-E  = %10000000
-RW = %01000000
-RS = %00100000
+E  = %10000000 ; LCD Enable
+RW = %01000000 ; LCD RW
+RS = %00100000 ; LCD register select
 
 kb_buffer = $0600 ; 256-byte keyboard buffer 0200-02ff
 
@@ -97,7 +97,7 @@ loop:
 key_pressed:
     ldx kb_rptr
     lda kb_buffer, x
-    jsr print_char
+    jsr handle_keypress
     inc kb_rptr
     jmp loop
 
@@ -117,7 +117,7 @@ lcd_instruction:
 
     rts
 
-lcd_data:
+print_char:
     jsr lcd_wait
 
     sta IO_1_PORTB
@@ -133,9 +133,9 @@ lcd_data:
 
     rts
 
-print_char:
+handle_keypress:
     cmp #$00 ; ignore non supported keys
-    beq exit_print_char
+    beq exit_handle_keypress
 
     cmp #$1B ; escape
     beq clear_screen
@@ -146,10 +146,10 @@ print_char:
     cmp #$0a ; line feed
     beq line_feed
 
-    jsr lcd_data
+    jsr print_char
     rts
 
-exit_print_char:
+exit_handle_keypress:
     rts
 
 clear_screen:
@@ -162,7 +162,7 @@ backspace:
     jsr lcd_instruction
 
     lda #$20 ; space
-    jsr lcd_data
+    jsr print_char
 
     lda #%00010000 ; shift cursor left
     jsr lcd_instruction
