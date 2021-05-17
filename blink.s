@@ -332,22 +332,25 @@ read_key:
     bne shifted_key
 
     lda keymap, x ; convert scancode to char
-    jmp push_key
+    jsr push_key
+    jmp exit_irq
 
 invalid_packet:
     pla ; get scancode from stack
     lda #$a4 ; write ¤ to signify an invalid packet was received
-    jmp push_key
+    jsr push_key
+    jmp exit_irq
 
 shifted_key:
     lda keymap_shifted, x ; convert scancode to char with shift
+    jsr push_key
+    jmp exit_irq
 
 push_key:
     ldx kb_wptr    ; write scancode in the buffer at offset kb_wptr
     sta kb_buffer, x
     inc kb_wptr    ; increment pointer
-
-    jmp exit_irq
+    rts
 
 shift_left_down:
     lda kb_flags
@@ -377,6 +380,7 @@ key_release:
     lda kb_flags
     ora #RELEASE
     sta kb_flags
+    jmp exit_irq
 
 exit_irq:
     pla
