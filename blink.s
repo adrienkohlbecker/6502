@@ -32,6 +32,7 @@ IO_2_PCR=$7FDC ; Address of peripheral control register
 E  = %10000000 ; LCD Enable
 RW = %01000000 ; LCD RW
 RS = %00100000 ; LCD register select
+KBS = %00010000 ; keyboard shift register
 
 kb_buffer = $0600 ; 256-byte keyboard buffer 0200-02ff
 
@@ -63,10 +64,22 @@ init:
     lda #%00010000 ; Set CB1 to positive going edge
     sta IO_2_PCR
 
+    lda #%00000000 ; ensure all ports are 0
+    sta IO_1_PORTA
+    sta IO_1_PORTB
+    sta IO_2_PORTA
+    sta IO_2_PORTB
+
     lda #%11100000 ; Set top 3 pins of IO_1_PORTA to output
     sta IO_1_DDRA
 
-    lda #%00000000 ; Set all pins of IO_2_PORTB to input
+    lda #%11111111 ; Set all pins of IO_1_PORTB to output
+    sta IO_1_DDRB
+
+    lda #%00010000 ; Set top 4th pins of IO_2_PORTA to output
+    sta IO_2_DDRA
+
+    lda #%11111111 ; Set all pins of IO_2_PORTB to output
     sta IO_2_DDRB
 
     lda #%00000001 ; Clear display
@@ -104,6 +117,7 @@ key_pressed:
 lcd_instruction:
     jsr lcd_wait
 
+    sei ; interrupt uses port B
     sta IO_1_PORTB
 
     lda #0 ; Clear RS/RW/E bits
@@ -115,10 +129,13 @@ lcd_instruction:
     lda #0 ; Clear RS/RW/E bits
     sta IO_1_PORTA
 
+    cli    ; re-enable interrupts
     rts
 
 print_char:
     jsr lcd_wait
+
+    sei ; interrupt uses port B
 
     sta IO_1_PORTB
 
@@ -131,6 +148,7 @@ print_char:
     lda #0 ; Clear RS/RW/E bits
     sta IO_1_PORTA
 
+    cli    ; re-enable interrupts
     rts
 
 handle_keypress:
@@ -181,7 +199,9 @@ exit_line_feed:
     rts
 
 lcd_read_address:
-    lda #%00000000 ; PORT B is input
+
+    sei ; donc want interrupts driving PORT B while the LCD is also driving it
+    lda #%00000000 ; Set all pins of IO_1_PORTB to input
     sta IO_1_DDRB
 
     lda #RW ; Clear RS/E bits; Set RW
@@ -196,8 +216,9 @@ lcd_read_address:
     lda #0 ; Clear RS/RW/E bits
     sta IO_1_PORTA
 
-    lda #%11111111 ; PORT B is output
+    lda #%11111111 ; Set all pins of IO_1_PORTB to output
     sta IO_1_DDRB
+    cli ; re-enable interrupts
 
     pla
     rts
@@ -206,6 +227,7 @@ lcd_read_address:
 lcd_wait:
     pha
 
+    sei ; donc want interrupts driving PORT B while the LCD is also driving it
     lda #%00000000 ; PORT B is input
     sta IO_1_DDRB
 
@@ -225,6 +247,7 @@ lcd_wait_loop:
 
     lda #%11111111 ; PORT B is output
     sta IO_1_DDRB
+    cli ; re-enable interrupts
 
     pla
     rts
@@ -237,6 +260,21 @@ irq:
     txa
     pha
 
+    lda #%00000000 ; PORT B is input
+    sta IO_2_DDRB
+
+    lda #KBS ; Enable shift register output
+    sta IO_2_PORTA
+
+    lda IO_2_PORTB ; read scan code into A register
+    pha
+
+    lda #%00000000 ; disable shift register output
+    sta IO_2_PORTA
+
+    lda #%11111111 ; PORT B is output
+    sta IO_2_DDRB
+
     lda kb_flags
     and #RELEASE ; if releasing a key
     beq read_key
@@ -245,7 +283,8 @@ irq:
     eor #RELEASE  ; reset the releasing bit
     sta kb_flags
 
-    lda IO_2_PORTB ; read key that's being released
+    pla ; get scancode from stack
+
     cmp #$12
     beq shift_left_up
     cmp #$59
@@ -254,7 +293,7 @@ irq:
     jmp exit_irq
 
 read_key:
-    lda IO_2_PORTB ; read scan code into A register
+    pla ; get scancode from stack
 
     cmp #$aa        ; if the scan code is  BAT (Basic Assurance Test) OK  https://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html#ss1.2
     beq exit_irq    ; ignore it
