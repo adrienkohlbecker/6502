@@ -37,3 +37,7 @@ end
 
 parse('keys_unshifted.txt', keycodes_to_keys)
 parse('keys_shifted.txt', keycodes_to_keys)
+parse('keys_diaeresis_unshifted.txt', keycodes_to_keys)
+parse('keys_diaeresis_shifted.txt', keycodes_to_keys)
+parse('keys_circumflex_unshifted.txt', keycodes_to_keys)
+parse('keys_circumflex_shifted.txt', keycodes_to_keys)

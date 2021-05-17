@@ -388,9 +388,14 @@ exit_irq:
     pla
     rti
 
-    org $fd00
+    org $f900
+
 keymap: incbin "layout/keys_unshifted.bin"
 keymap_shifted: incbin "layout/keys_shifted.bin"
+keymap_diaeresis: incbin "layout/keys_diaeresis_unshifted.bin"
+keymap_diaeresis_shifted: incbin "layout/keys_diaeresis_shifted.bin"
+keymap_circumflex: incbin "layout/keys_circumflex_unshifted.bin"
+keymap_circumflex_shifted: incbin "layout/keys_circumflex_shifted.bin"
 
 ; === vector locations ===
 
