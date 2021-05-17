@@ -51,6 +51,9 @@ DIAERESIS = %00010000
 
     org ORIG
 
+    include src/lcd.s
+    include src/keyboard.s
+
 init:
     ldx #$ff ; initialize stack pointer to 01FF
     txs
@@ -117,43 +120,6 @@ key_pressed:
     inc kb_rptr
     jmp loop
 
-lcd_instruction:
-    jsr lcd_wait
-
-    sei ; interrupt uses port B
-    sta IO_1_PORTB
-
-    lda #0 ; Clear RS/RW/E bits
-    sta IO_1_PORTA
-
-    lda #E  ; Set the Enable bit to send the instruction
-    sta IO_1_PORTA
-
-    lda #0 ; Clear RS/RW/E bits
-    sta IO_1_PORTA
-
-    cli    ; re-enable interrupts
-    rts
-
-print_char:
-    jsr lcd_wait
-
-    sei ; interrupt uses port B
-
-    sta IO_1_PORTB
-
-    lda #RS ; Clear RW/E bits; Set RS
-    sta IO_1_PORTA
-
-    lda #(RS | E)  ; Set the Enable bit + Register select to send the data
-    sta IO_1_PORTA
-
-    lda #0 ; Clear RS/RW/E bits
-    sta IO_1_PORTA
-
-    cli    ; re-enable interrupts
-    rts
-
 handle_keypress:
     cmp #$00 ; ignore non supported keys
     beq exit_handle_keypress
@@ -210,59 +176,6 @@ left_arrow:
 
     rts
 
-lcd_read_address:
-
-    sei ; donc want interrupts driving PORT B while the LCD is also driving it
-    lda #%00000000 ; Set all pins of IO_1_PORTB to input
-    sta IO_1_DDRB
-
-    lda #RW ; Clear RS/E bits; Set RW
-    sta IO_1_PORTA
-
-    lda #(RW | E)  ; Set the Enable bit + RW to read the data
-    sta IO_1_PORTA
-
-    lda IO_1_PORTB
-    pha
-
-    lda #0 ; Clear RS/RW/E bits
-    sta IO_1_PORTA
-
-    lda #%11111111 ; Set all pins of IO_1_PORTB to output
-    sta IO_1_DDRB
-    cli ; re-enable interrupts
-
-    pla
-    rts
-
-lcd_wait:
-    pha
-
-    sei ; donc want interrupts driving PORT B while the LCD is also driving it
-    lda #%00000000 ; PORT B is input
-    sta IO_1_DDRB
-
-lcd_wait_loop:
-    lda #RW ; Clear RS/E bits; Set RW
-    sta IO_1_PORTA
-
-    lda #(RW | E)  ; Set the Enable bit + RW to read the data
-    sta IO_1_PORTA
-
-    lda IO_1_PORTB
-    and #%10000000 ; Get only value of busy flag
-    bne lcd_wait_loop
-
-    lda #0 ; Clear RS/RW/E bits
-    sta IO_1_PORTA
-
-    lda #%11111111 ; PORT B is output
-    sta IO_1_DDRB
-    cli ; re-enable interrupts
-
-    pla
-    rts
-
 nmi:
     rti
 
@@ -293,130 +206,13 @@ irq:
     and #KB_VALID
     beq invalid_packet
 
-    lda kb_flags
-    and #RELEASE ; if releasing a key
-    beq read_key
-
-    lda kb_flags
-    eor #RELEASE  ; reset the releasing bit
-    sta kb_flags
-
-    pla ; get scancode from stack
-
-    cmp #$12
-    beq shift_left_up
-    cmp #$59
-    beq shift_right_up
-
-    jmp exit_irq
-
-read_key:
-    pla ; get scancode from stack
-
-    cmp #$aa        ; if the scan code is  BAT (Basic Assurance Test) OK  https://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html#ss1.2
-    beq exit_irq    ; ignore it
-
-    cmp #$f0        ; if the scan code is key release
-    beq key_release ; set release flag
-
-    cmp #$12
-    beq shift_left_down
-    cmp #$59
-    beq shift_right_down
-    cmp #$54
-    beq circumflex_down
-
-    tax
-    lda kb_flags
-    and #SHIFT_LEFT
-    bne shifted_key
-
-    lda kb_flags
-    and #SHIFT_RIGHT
-    bne shifted_key
-
-    lda kb_flags
-    and #CIRCUMFLEX
-    bne circumflex_key
-
-    lda kb_flags
-    and #DIAERESIS
-    bne diaeresis_key
-
-    lda keymap, x ; convert scancode to char
-    jsr push_key
+    pla
+    jsr handle_keycode
     jmp exit_irq
 
 invalid_packet:
     pla ; get scancode from stack
     lda #$a4 ; write ¤ to signify an invalid packet was received
-    jsr push_key
-    jmp exit_irq
-
-shifted_key:
-    lda kb_flags
-    and #CIRCUMFLEX
-    bne shifted_circumflex_key
-
-    lda kb_flags
-    and #DIAERESIS
-    bne shifted_diaeresis_key
-
-    lda keymap_shifted, x ; convert scancode to char with shift
-    jsr push_key
-    jmp exit_irq
-
-push_key:
-    ldx kb_wptr    ; write scancode in the buffer at offset kb_wptr
-    sta kb_buffer, x
-    inc kb_wptr    ; increment pointer
-    rts
-
-shift_left_down:
-    lda kb_flags
-    ora #SHIFT_LEFT
-    sta kb_flags
-    jmp exit_irq
-
-shift_left_up:
-    lda kb_flags
-    eor #SHIFT_LEFT ; flip the shift bit
-    sta kb_flags
-    jmp exit_irq
-
-shift_right_down:
-    lda kb_flags
-    ora #SHIFT_RIGHT
-    sta kb_flags
-    jmp exit_irq
-
-shift_right_up:
-    lda kb_flags
-    eor #SHIFT_RIGHT ; flip the shift bit
-    sta kb_flags
-    jmp exit_irq
-
-key_release:
-    lda kb_flags
-    ora #RELEASE
-    sta kb_flags
-    jmp exit_irq
-
-diaeresis_key:
-    lda kb_flags
-    eor #DIAERESIS ; flip the diaeresis bit
-    sta kb_flags
-
-    lda keymap_diaeresis, x ; convert scancode to char with shift
-    jsr push_key
-    jmp exit_irq
-
-circumflex_key:
-    lda kb_flags
-    eor #CIRCUMFLEX ; flip the circumflex bit
-    sta kb_flags
-
-    lda keymap_circumflex, x ; convert scancode to char with shift
     jsr push_key
     jmp exit_irq
 
@@ -426,55 +222,6 @@ exit_irq:
     pla
     rti
 
-circumflex_down:
-    lda kb_flags
-    and #SHIFT_LEFT
-    bne diaeresis_down
-
-    lda kb_flags
-    and #SHIFT_RIGHT
-    bne diaeresis_down
-
-    lda kb_flags
-    ora #CIRCUMFLEX
-    sta kb_flags
-
-    lda #$5e ; ^ char
-    jsr push_key
-    lda #$11 ; DC1 mapped to left arrow
-    jsr push_key
-
-    jmp exit_irq
-
-diaeresis_down:
-    lda kb_flags
-    ora #DIAERESIS
-    sta kb_flags
-
-    lda #$a8 ; ¨ char
-    jsr push_key
-    lda #$11 ; DC1 mapped to left arrow
-    jsr push_key
-
-    jmp exit_irq
-
-shifted_diaeresis_key:
-    lda kb_flags
-    eor #DIAERESIS ; flip the diaeresis bit
-    sta kb_flags
-
-    lda keymap_diaeresis_shifted, x ; convert scancode to char with diaeresis + shift
-    jsr push_key
-    jmp exit_irq
-
-shifted_circumflex_key:
-    lda kb_flags
-    eor #CIRCUMFLEX ; flip the circumflex bit
-    sta kb_flags
-
-    lda keymap_circumflex_shifted, x ; convert scancode to char with circumflex + shift
-    jsr push_key
-    jmp exit_irq
     org $f900
 
 keymap: incbin "layout/keys_unshifted.bin"
