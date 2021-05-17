@@ -15,6 +15,7 @@
 
 #define ASCII_08        KEY_BACKSPACE                           // 08 backspace
 #define ASCII_0A        KEY_ENTER                               // 10 line feed
+#define ASCII_11        KEY_LEFT                                // 17 device control 1
 #define ASCII_1B        KEY_ESC                                 // 27 escape
 #define ASCII_20        KEY_SPACE                               // 32
 #define ASCII_21        KEY_SLASH                               // 33 !

@@ -166,6 +166,9 @@ handle_keypress:
     cmp #$0a ; line feed
     beq line_feed
 
+    cmp #$11 ; DC1 mapped to left arrow
+    beq left_arrow
+
     jsr print_char
     rts
 
@@ -198,6 +201,12 @@ line_feed:
     jsr lcd_instruction
 
 exit_line_feed:
+    rts
+
+left_arrow:
+    lda #%00010000 ; shift cursor left
+    jsr lcd_instruction
+
     rts
 
 lcd_read_address:
