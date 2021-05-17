@@ -44,6 +44,8 @@ kb_flags = $0002
 RELEASE = %00000001
 SHIFT_LEFT = %00000010
 SHIFT_RIGHT = %00000100
+CIRCUMFLEX = %00001000
+DIAERESIS = %00010000
 
 ; === main program ===
 
@@ -321,6 +323,8 @@ read_key:
     beq shift_left_down
     cmp #$59
     beq shift_right_down
+    cmp #$54
+    beq circumflex_down
 
     tax
     lda kb_flags
@@ -330,6 +334,14 @@ read_key:
     lda kb_flags
     and #SHIFT_RIGHT
     bne shifted_key
+
+    lda kb_flags
+    and #CIRCUMFLEX
+    bne circumflex_key
+
+    lda kb_flags
+    and #DIAERESIS
+    bne diaeresis_key
 
     lda keymap, x ; convert scancode to char
     jsr push_key
@@ -342,6 +354,14 @@ invalid_packet:
     jmp exit_irq
 
 shifted_key:
+    lda kb_flags
+    and #CIRCUMFLEX
+    bne shifted_circumflex_key
+
+    lda kb_flags
+    and #DIAERESIS
+    bne shifted_diaeresis_key
+
     lda keymap_shifted, x ; convert scancode to char with shift
     jsr push_key
     jmp exit_irq
@@ -382,12 +402,79 @@ key_release:
     sta kb_flags
     jmp exit_irq
 
+diaeresis_key:
+    lda kb_flags
+    eor #DIAERESIS ; flip the diaeresis bit
+    sta kb_flags
+
+    lda keymap_diaeresis, x ; convert scancode to char with shift
+    jsr push_key
+    jmp exit_irq
+
+circumflex_key:
+    lda kb_flags
+    eor #CIRCUMFLEX ; flip the circumflex bit
+    sta kb_flags
+
+    lda keymap_circumflex, x ; convert scancode to char with shift
+    jsr push_key
+    jmp exit_irq
+
 exit_irq:
     pla
     tax
     pla
     rti
 
+circumflex_down:
+    lda kb_flags
+    and #SHIFT_LEFT
+    bne diaeresis_down
+
+    lda kb_flags
+    and #SHIFT_RIGHT
+    bne diaeresis_down
+
+    lda kb_flags
+    ora #CIRCUMFLEX
+    sta kb_flags
+
+    lda #$5e ; ^ char
+    jsr push_key
+    lda #$11 ; DC1 mapped to left arrow
+    jsr push_key
+
+    jmp exit_irq
+
+diaeresis_down:
+    lda kb_flags
+    ora #DIAERESIS
+    sta kb_flags
+
+    lda #$a8 ; ¨ char
+    jsr push_key
+    lda #$11 ; DC1 mapped to left arrow
+    jsr push_key
+
+    jmp exit_irq
+
+shifted_diaeresis_key:
+    lda kb_flags
+    eor #DIAERESIS ; flip the diaeresis bit
+    sta kb_flags
+
+    lda keymap_diaeresis_shifted, x ; convert scancode to char with diaeresis + shift
+    jsr push_key
+    jmp exit_irq
+
+shifted_circumflex_key:
+    lda kb_flags
+    eor #CIRCUMFLEX ; flip the circumflex bit
+    sta kb_flags
+
+    lda keymap_circumflex_shifted, x ; convert scancode to char with circumflex + shift
+    jsr push_key
+    jmp exit_irq
     org $f900
 
 keymap: incbin "layout/keys_unshifted.bin"
