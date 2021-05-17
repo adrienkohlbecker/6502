@@ -75,7 +75,7 @@ lcd_wait:
     sta IO_1_PORTA
 
     lda IO_1_PORTB
-    and #%10000000 ; Get only value of busy flag
+    bit #%10000000 ; Get only value of busy flag
     bne .lcd_wait_loop
 
     lda #0 ; Clear RS/RW/E bits

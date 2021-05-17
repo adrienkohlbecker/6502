@@ -1,6 +1,6 @@
 default:
 	(cd layout && ./make.sh)
-	./vasm6502_oldstyle -Fbin -pad=234 -o rom.bin src/main.s
+	./vasm6502_oldstyle -Fbin -pad=234 -wdc02 -o rom.bin src/main.s
 	hexdump -C rom.bin
 
 eeprom:

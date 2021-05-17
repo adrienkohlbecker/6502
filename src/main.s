@@ -12,39 +12,46 @@
 ; 0111 1111 1110 0000 - 0111 1111 1110 1111 | 7FE0 - 7FEF | I/O #3
 ; 0111 1111 1111 0000 - 0111 1111 1111 1111 | 7FF0 - 7FFF | I/O #4
 
-IO_1_DDRA=$7FC3 ; Address of data direction register for PORT A
-IO_1_DDRB=$7FC2 ; Address of data direction register for PORT B
-IO_1_PORTA=$7FC1 ; Address of PORT A
-IO_1_PORTB=$7FC0 ; Address of PORT B
-IO_1_IFR=$7FCD ; Address of interupt flag register
-IO_1_IER=$7FCE ; Address of interupt enable register
-IO_1_PCR=$7FCC ; Address of peripheral control register
-IO_2_DDRA=$7FD3 ; Address of data direction register for PORT A
-IO_2_DDRB=$7FD2 ; Address of data direction register for PORT B
-IO_2_PORTA=$7FD1 ; Address of PORT A
-IO_2_PORTB=$7FD0 ; Address of PORT B
-IO_2_IFR=$7FDD ; Address of interupt flag register
-IO_2_IER=$7FDE ; Address of interupt enable register
-IO_2_PCR=$7FDC ; Address of peripheral control register
+; IO #1
+IO_1_DDRA  = $7FC3 ; Address of data direction register for PORT A
+IO_1_DDRB  = $7FC2 ; Address of data direction register for PORT B
+IO_1_PORTA = $7FC1 ; Address of PORT A
+IO_1_PORTB = $7FC0 ; Address of PORT B
+IO_1_IFR   = $7FCD ; Address of interupt flag register
+IO_1_IER   = $7FCE ; Address of interupt enable register
+IO_1_PCR   = $7FCC ; Address of peripheral control register
 
-E  = %10000000 ; LCD Enable
-RW = %01000000 ; LCD RW
-RS = %00100000 ; LCD register select
-KBS = %00010000 ; keyboard shift register
+; IO #2
+IO_2_DDRA  = $7FD3 ; Address of data direction register for PORT A
+IO_2_DDRB  = $7FD2 ; Address of data direction register for PORT B
+IO_2_PORTA = $7FD1 ; Address of PORT A
+IO_2_PORTB = $7FD0 ; Address of PORT B
+IO_2_IFR   = $7FDD ; Address of interupt flag register
+IO_2_IER   = $7FDE ; Address of interupt enable register
+IO_2_PCR   = $7FDC ; Address of peripheral control register
+
+; PORT A signal to pin mapping
+E        = %10000000 ; LCD Enable
+RW       = %01000000 ; LCD RW
+RS       = %00100000 ; LCD register select
+KBS      = %00010000 ; keyboard shift register
 KB_VALID = %00001000 ; keyboard packet valid input
 
-kb_buffer = $0600 ; 256-byte keyboard buffer 0200-02ff
-
+; zero page locations
 kb_wptr = $0000
 kb_rptr = $0001
 kb_flags = $0002
+
+; memory locations
+kb_buffer = $0200 ; 256-byte keyboard buffer 0200-02ff
 
 ; === main program ===
 
     org $8000
 
-    include lcd.s
     include keyboard.s
+    include lcd.s
+    include binhex.s
 
 keymap: incbin "layout/keys_unshifted.bin"
 keymap_shifted: incbin "layout/keys_shifted.bin"
@@ -57,7 +64,6 @@ init:
     ldx #$ff ; initialize stack pointer to 01FF
     txs
 
-    cld ; clear decimal arithmetic mode
     cli ; enable interrupt handling
 
     lda #%10010000 ; enable interrupt on CB1
@@ -69,11 +75,10 @@ init:
     lda #%00010000 ; Set CB1 to positive going edge
     sta IO_2_PCR
 
-    lda #%00000000 ; ensure all ports are 0
-    sta IO_1_PORTA
-    sta IO_1_PORTB
-    sta IO_2_PORTA
-    sta IO_2_PORTB
+    stz IO_1_PORTA ; ensure all ports are 0
+    stz IO_1_PORTB
+    stz IO_2_PORTA
+    stz IO_2_PORTB
 
     lda #%11100000 ; Set top 3 pins of IO_1_PORTA to output
     sta IO_1_DDRA
@@ -99,10 +104,9 @@ init:
     lda #%0000110 ; Increment and shift cursor; don't shift display
     jsr lcd_instruction
 
-    lda #$00 ; initialize keyboard pointers to 0
-    sta kb_wptr
-    sta kb_rptr
-    sta kb_flags
+    stz kb_wptr ; initialize keyboard pointers to 0
+    stz kb_rptr
+    stz kb_flags
 
 loop:
     sei         ; pointers are set in interrupt, briefly disable interrupts while we read them
@@ -160,7 +164,7 @@ backspace:
 
 line_feed:
     jsr lcd_read_address ; note, this will clear our line feed from the A register
-    and #%01000000 ; check value of higher order addres bit; 1 means we're in the second line
+    bit #%01000000 ; check value of higher order addres bit; 1 means we're in the second line
     bne exit_line_feed ; if we're already on the second line, ignore
 
     lda #%11000000 ; set address to 40 = first char in second line
@@ -180,8 +184,8 @@ nmi:
 
 irq:
     pha
-    txa
-    pha
+    phx
+    phy
 
     lda #%00000000 ; PORT B is input
     sta IO_2_DDRB
@@ -216,8 +220,8 @@ invalid_packet:
     jmp exit_irq
 
 exit_irq:
-    pla
-    tax
+    ply
+    plx
     pla
     rti
 
