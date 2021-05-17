@@ -54,6 +54,7 @@ init:
     ldx #$ff ; initialize stack pointer to 01FF
     txs
 
+    cld ; clear decimal arithmetic mode
     cli ; enable interrupt handling
 
     lda #%10010000 ; enable interrupt on CB1
