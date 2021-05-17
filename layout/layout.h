@@ -80,6 +80,7 @@
 #define ASCII_5C        KEY_8 + ALTGR_MASK                      // 92
 #define ASCII_5D        KEY_MINUS + ALTGR_MASK                  // 93 ]
 #define ASCII_5E        KEY_9 + ALTGR_MASK                      // 94 ^
+#define ASCII_5E        CIRCUMFLEX_BITS + KEY_SPACE             // 94 ^
 #define ASCII_5F        KEY_8                                   // 95 _
 #define ASCII_60        GRAVE_ACCENT_BITS + KEY_SPACE           // 96 `
 #define ASCII_61        KEY_Q                                   // 97 a
@@ -201,7 +202,7 @@
 #define ISO_8859_1_F6   DIAERESIS_BITS + KEY_O                  // 246 ö     o DIAERESIS
 #define ISO_8859_1_F7   0                                       // 247 ÷     DIVISION
 #define ISO_8859_1_F8   0                                       // 248 ø     o STROKE
-#define ISO_8859_1_F9   KEY_SEMICOLON                           // 249 ù     u GRAVE
+#define ISO_8859_1_F9   KEY_QUOTE                               // 249 ù     u GRAVE
 #define ISO_8859_1_FA   0                                       // 250 ú     u ACUTE
 #define ISO_8859_1_FB   CIRCUMFLEX_BITS + KEY_U                 // 251 û     u CIRCUMFLEX
 #define ISO_8859_1_FC   DIAERESIS_BITS + KEY_U                  // 252 ü     u DIAERESIS
