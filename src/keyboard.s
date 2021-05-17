@@ -1,3 +1,10 @@
+; flags
+RELEASE = %00000001
+SHIFT_LEFT = %00000010
+SHIFT_RIGHT = %00000100
+CIRCUMFLEX = %00001000
+DIAERESIS = %00010000
+
 push_key:
     ldx kb_wptr    ; write scancode in the buffer at offset kb_wptr
     sta kb_buffer, x

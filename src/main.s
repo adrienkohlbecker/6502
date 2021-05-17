@@ -12,8 +12,6 @@
 ; 0111 1111 1110 0000 - 0111 1111 1110 1111 | 7FE0 - 7FEF | I/O #3
 ; 0111 1111 1111 0000 - 0111 1111 1111 1111 | 7FF0 - 7FFF | I/O #4
 
-ORIG=$8000 ; Address of first ROM byte
-VECTOR=$fffa ; Address of vector locations
 IO_1_DDRA=$7FC3 ; Address of data direction register for PORT A
 IO_1_DDRB=$7FC2 ; Address of data direction register for PORT B
 IO_1_PORTA=$7FC1 ; Address of PORT A
@@ -41,18 +39,19 @@ kb_wptr = $0000
 kb_rptr = $0001
 kb_flags = $0002
 
-RELEASE = %00000001
-SHIFT_LEFT = %00000010
-SHIFT_RIGHT = %00000100
-CIRCUMFLEX = %00001000
-DIAERESIS = %00010000
-
 ; === main program ===
 
-    org ORIG
+    org $8000
 
     include lcd.s
     include keyboard.s
+
+keymap: incbin "layout/keys_unshifted.bin"
+keymap_shifted: incbin "layout/keys_shifted.bin"
+keymap_diaeresis: incbin "layout/keys_diaeresis_unshifted.bin"
+keymap_diaeresis_shifted: incbin "layout/keys_diaeresis_shifted.bin"
+keymap_circumflex: incbin "layout/keys_circumflex_unshifted.bin"
+keymap_circumflex_shifted: incbin "layout/keys_circumflex_shifted.bin"
 
 init:
     ldx #$ff ; initialize stack pointer to 01FF
@@ -222,18 +221,9 @@ exit_irq:
     pla
     rti
 
-    org $f900
-
-keymap: incbin "layout/keys_unshifted.bin"
-keymap_shifted: incbin "layout/keys_shifted.bin"
-keymap_diaeresis: incbin "layout/keys_diaeresis_unshifted.bin"
-keymap_diaeresis_shifted: incbin "layout/keys_diaeresis_shifted.bin"
-keymap_circumflex: incbin "layout/keys_circumflex_unshifted.bin"
-keymap_circumflex_shifted: incbin "layout/keys_circumflex_shifted.bin"
-
 ; === vector locations ===
 
-    org VECTOR
+    org $fffa
     word nmi
     word init
     word irq
