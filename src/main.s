@@ -51,8 +51,8 @@ DIAERESIS = %00010000
 
     org ORIG
 
-    include src/lcd.s
-    include src/keyboard.s
+    include lcd.s
+    include keyboard.s
 
 init:
     ldx #$ff ; initialize stack pointer to 01FF
