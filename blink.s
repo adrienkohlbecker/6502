@@ -45,7 +45,6 @@ RELEASE = %00000001
 SHIFT_LEFT = %00000010
 SHIFT_RIGHT = %00000100
 
-
 ; === main program ===
 
     org ORIG
@@ -234,7 +233,6 @@ lcd_read_address:
     pla
     rts
 
-
 lcd_wait:
     pha
 
@@ -344,7 +342,7 @@ invalid_packet:
 shifted_key:
     lda keymap_shifted, x ; convert scancode to char with shift
 
-push_key
+push_key:
     ldx kb_wptr    ; write scancode in the buffer at offset kb_wptr
     sta kb_buffer, x
     inc kb_wptr    ; increment pointer
