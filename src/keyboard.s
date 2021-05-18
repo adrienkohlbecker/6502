@@ -8,6 +8,8 @@ ALTGR = 4
 ; deadkeys
 CIRCUMFLEX = 0
 DIAERESIS = 1
+TILDE = 2
+GRAVE_ACCENT = 3
 
 push_key:
     ldx kb_wptr    ; write scancode in the buffer at offset kb_wptr
@@ -71,6 +73,10 @@ handle_keycode
     beq .pressing_shift_right
     cmp #$54
     beq .pressing_circumflex
+    cmp #$1e
+    beq .pressing_tilde
+    cmp #$3d
+    beq .pressing_grave_accent
 
     jmp .pressing_printable_key
 
@@ -113,6 +119,30 @@ handle_keycode
 
     rts ; return from handle_keycode
 
+.pressing_tilde:
+    bbr #ALTGR, kb_flags, .pressing_printable_key ; continue only if altgr is set
+
+    smb #TILDE, kb_deadkey_flags
+
+    lda #$7e ; ~ char
+    jsr push_key
+    lda #$11 ; DC1 mapped to left arrow
+    jsr push_key
+
+    rts ; return from handle_keycode
+
+.pressing_grave_accent:
+    bbr #ALTGR, kb_flags, .pressing_printable_key ; continue only if altgr is set
+
+    smb #GRAVE_ACCENT, kb_deadkey_flags
+
+    lda #$60 ; ` char
+    jsr push_key
+    lda #$11 ; DC1 mapped to left arrow
+    jsr push_key
+
+    rts ; return from handle_keycode
+
 .pressing_extended_key:
     rmb #EXTENDED, kb_flags
 
@@ -140,6 +170,8 @@ handle_keycode
     bbs #SHIFT_RIGHT, kb_flags, .map_keycode_to_shifted_key
     bbs #CIRCUMFLEX, kb_deadkey_flags, .map_keycode_to_circumflex_key
     bbs #DIAERESIS, kb_deadkey_flags, .map_keycode_to_diaeresis_key
+    bbs #TILDE, kb_deadkey_flags, .map_keycode_to_tilde_key
+    bbs #GRAVE_ACCENT, kb_deadkey_flags, .map_keycode_to_grave_accent_key
 
     lda keymap, x ; convert scancode to char
     jsr push_key
@@ -158,6 +190,9 @@ handle_keycode
 .map_keycode_to_shifted_key:
     bbs #CIRCUMFLEX, kb_deadkey_flags, .map_keycode_to_shifted_circumflex_key
     bbs #DIAERESIS, kb_deadkey_flags, .map_keycode_to_shifted_diaeresis_key
+    bbs #TILDE, kb_deadkey_flags, .map_keycode_to_shifted_tilde_key
+    bbs #GRAVE_ACCENT, kb_deadkey_flags, .map_keycode_to_shifted_grave_accent_key
+
 
     lda keymap_shifted, x ; convert scancode to char with shift
     jsr push_key
@@ -180,6 +215,22 @@ handle_keycode
 
     rts ; return from handle_keycode
 
+.map_keycode_to_tilde_key:
+    rmb #TILDE, kb_deadkey_flags
+
+    lda keymap_tilde, x ; convert scancode to char with shift
+    jsr push_key
+
+    rts ; return from handle_keycode
+
+.map_keycode_to_grave_accent_key:
+    rmb #GRAVE_ACCENT, kb_deadkey_flags
+
+    lda keymap_grave_accent, x ; convert scancode to char with shift
+    jsr push_key
+
+    rts ; return from handle_keycode
+
 .map_keycode_to_shifted_diaeresis_key:
     rmb #DIAERESIS, kb_deadkey_flags
 
@@ -192,6 +243,22 @@ handle_keycode
     rmb #CIRCUMFLEX, kb_deadkey_flags
 
     lda keymap_circumflex_shifted, x ; convert scancode to char with circumflex + shift
+    jsr push_key
+
+    rts ; return from handle_keycode
+
+.map_keycode_to_shifted_tilde_key:
+    rmb #TILDE, kb_deadkey_flags
+
+    lda keymap_tilde_shifted, x ; convert scancode to char with tilde + shift
+    jsr push_key
+
+    rts ; return from handle_keycode
+
+.map_keycode_to_shifted_grave_accent_key:
+    rmb #GRAVE_ACCENT, kb_deadkey_flags
+
+    lda keymap_grave_accent_shifted, x ; convert scancode to char with grave accent + shift
     jsr push_key
 
     rts ; return from handle_keycode

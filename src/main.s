@@ -61,6 +61,10 @@ keymap_diaeresis: incbin "layout/keys_diaeresis_unshifted.bin"
 keymap_diaeresis_shifted: incbin "layout/keys_diaeresis_shifted.bin"
 keymap_circumflex: incbin "layout/keys_circumflex_unshifted.bin"
 keymap_circumflex_shifted: incbin "layout/keys_circumflex_shifted.bin"
+keymap_tilde: incbin "layout/keys_tilde_unshifted.bin"
+keymap_tilde_shifted: incbin "layout/keys_tilde_shifted.bin"
+keymap_grave_accent: incbin "layout/keys_grave_accent_unshifted.bin"
+keymap_grave_accent_shifted: incbin "layout/keys_grave_accent_shifted.bin"
 
 init:
     ldx #$ff ; initialize stack pointer to 01FF

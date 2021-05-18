@@ -11,4 +11,10 @@ cat layout.h | grep "DIAERESIS_BITS" | grep -v "SHIFT_MASK" | grep -v "^//" | tr
 cat layout.h | grep "CIRCUMFLEX_BITS" | grep "SHIFT_MASK" | grep -v "^//" | tr -s ' '| cut -d" " -f2,5,8- | grep -v -e '^[[:space:]]*$' > keys_circumflex_shifted.txt
 cat layout.h | grep "CIRCUMFLEX_BITS" | grep -v "SHIFT_MASK" | grep -v "^//" | tr -s ' '| cut -d" " -f2,5,6- | grep -v -e '^[[:space:]]*$' > keys_circumflex_unshifted.txt
 
+cat layout.h | grep "TILDE_BITS" | grep "SHIFT_MASK" | grep -v "^//" | tr -s ' '| cut -d" " -f2,5,8- | grep -v -e '^[[:space:]]*$' > keys_tilde_shifted.txt
+cat layout.h | grep "TILDE_BITS" | grep -v "SHIFT_MASK" | grep -v "^//" | tr -s ' '| cut -d" " -f2,5,6- | grep -v -e '^[[:space:]]*$' > keys_tilde_unshifted.txt
+
+cat layout.h | grep "GRAVE_ACCENT_BITS" | grep "SHIFT_MASK" | grep -v "^//" | tr -s ' '| cut -d" " -f2,5,8- | grep -v -e '^[[:space:]]*$' > keys_grave_accent_shifted.txt
+cat layout.h | grep "GRAVE_ACCENT_BITS" | grep -v "SHIFT_MASK" | grep -v "^//" | tr -s ' '| cut -d" " -f2,5,6- | grep -v -e '^[[:space:]]*$' > keys_grave_accent_unshifted.txt
+
 ruby parse.rb
