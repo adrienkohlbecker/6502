@@ -39,6 +39,14 @@ handle_keycode
 
 .releasing_extended_key
     rmb #EXTENDED, kb_flags
+
+    cmp #$11 ; right alt (alt-gr)
+    beq .releasing_alt_gr
+
+    rts ; return from handle_keycode
+
+.releasing_alt_gr
+    rmb #ALTGR, kb_flags
     rts ; return from handle_keycode
 
 .releasing_shift_left:
@@ -107,6 +115,14 @@ handle_keycode
 
 .pressing_extended_key:
     rmb #EXTENDED, kb_flags
+
+    cmp #$11 ; right alt (alt-gr)
+    beq .pressing_alt_gr
+
+    rts ; return from handle_keycode
+
+.pressing_alt_gr
+    smb #ALTGR, kb_flags
     rts ; return from handle_keycode
 
 .pressing_printable_key:
@@ -119,12 +135,22 @@ handle_keycode
 
     tax
 
+    bbs #ALTGR, kb_flags, .map_keycode_to_altgr_key
     bbs #SHIFT_LEFT, kb_flags, .map_keycode_to_shifted_key
     bbs #SHIFT_RIGHT, kb_flags, .map_keycode_to_shifted_key
     bbs #CIRCUMFLEX, kb_deadkey_flags, .map_keycode_to_circumflex_key
     bbs #DIAERESIS, kb_deadkey_flags, .map_keycode_to_diaeresis_key
 
     lda keymap, x ; convert scancode to char
+    jsr push_key
+
+    rts ; return from handle_keycode
+
+.map_keycode_to_altgr_key:
+    stz kb_deadkey_flags ; no deadkeys work with altgr so we can just clear this instead of testing the flags
+    ; TODO: handle shift+altgr
+
+    lda keymap_altgr, x ; convert scancode to char with shift
     jsr push_key
 
     rts ; return from handle_keycode
