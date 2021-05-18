@@ -41,6 +41,7 @@ KB_VALID = %00001000 ; keyboard packet valid input
 kb_wptr = $0000
 kb_rptr = $0001
 kb_flags = $0002
+kb_deadkey_flags = $0003
 
 ; memory locations
 kb_buffer = $0200 ; 256-byte keyboard buffer 0200-02ff
@@ -107,6 +108,7 @@ init:
     stz kb_wptr ; initialize keyboard pointers to 0
     stz kb_rptr
     stz kb_flags
+    stz kb_deadkey_flags
 
 loop:
     sei         ; pointers are set in interrupt, briefly disable interrupts while we read them
