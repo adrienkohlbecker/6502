@@ -9,7 +9,7 @@ def parse(file, keycodes_to_keys)
     keys_to_chars = {}
 
     File.open(file).each_line do |line|
-        key, char = line.split(' ')
+        char, key = line.split(' ')
         keys_to_chars[key] = ('0x' + char.sub('ASCII_', '').sub('ISO_8859_1_', '')).to_i(16)
     end
 
