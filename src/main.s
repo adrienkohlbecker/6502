@@ -56,6 +56,7 @@ kb_buffer = $0200 ; 256-byte keyboard buffer 0200-02ff
 
 keymap: incbin "layout/keys_unshifted.bin"
 keymap_shifted: incbin "layout/keys_shifted.bin"
+keymap_altgr: incbin "layout/keys_altgr.bin"
 keymap_diaeresis: incbin "layout/keys_diaeresis_unshifted.bin"
 keymap_diaeresis_shifted: incbin "layout/keys_diaeresis_shifted.bin"
 keymap_circumflex: incbin "layout/keys_circumflex_unshifted.bin"
