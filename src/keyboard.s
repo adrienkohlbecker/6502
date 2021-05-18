@@ -1,5 +1,6 @@
 ; kb flags
 RELEASE = 0
+EXTENDED = 1
 SHIFT_LEFT = 2
 SHIFT_RIGHT = 3
 ALTGR = 4
@@ -27,11 +28,17 @@ handle_keycode
 .releasing_key:
     rmb #RELEASE, kb_flags
 
+    bbs #EXTENDED, kb_flags, .releasing_extended_key
+
     cmp #$12
     beq .releasing_shift_left
     cmp #$59
     beq .releasing_shift_right
 
+    rts ; return from handle_keycode
+
+.releasing_extended_key
+    rmb #EXTENDED, kb_flags
     rts ; return from handle_keycode
 
 .releasing_shift_left:
@@ -45,6 +52,10 @@ handle_keycode
 .pressing_key:
     cmp #$f0              ; if the scan code is key release
     beq .set_release_flag ; set release flag
+    cmp #$e0              ; if the scan code is extended key
+    beq .set_extended_flag ; set extended flag
+
+    bbs #EXTENDED, kb_flags, .pressing_extended_key
 
     cmp #$12
     beq .pressing_shift_left
@@ -57,6 +68,10 @@ handle_keycode
 
 .set_release_flag:
     smb #RELEASE, kb_flags
+    rts ; return from handle_keycode
+
+.set_extended_flag:
+    smb #EXTENDED, kb_flags
     rts ; return from handle_keycode
 
 .pressing_shift_left:
@@ -88,6 +103,10 @@ handle_keycode
     lda #$11 ; DC1 mapped to left arrow
     jsr push_key
 
+    rts ; return from handle_keycode
+
+.pressing_extended_key:
+    rmb #EXTENDED, kb_flags
     rts ; return from handle_keycode
 
 .pressing_printable_key:
