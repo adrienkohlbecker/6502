@@ -84,7 +84,7 @@
 #define ASCII_5E        CIRCUMFLEX_BITS + KEY_SPACE             // 94 ^
 #define ASCII_5F        KEY_8                                   // 95 _
 #define ASCII_60        GRAVE_ACCENT_BITS + KEY_SPACE           // 96 `
-#define ASCII_60        KEY+7 § ALTGR+MASK                      // 96 `
+#define ASCII_60        KEY_7 + ALTGR_MASK                      // 96 `
 #define ASCII_61        KEY_Q                                   // 97 a
 #define ASCII_62        KEY_B                                   // 98 b
 #define ASCII_63        KEY_C                                   // 99 c
