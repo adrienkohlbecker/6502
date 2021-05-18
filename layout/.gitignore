@@ -1,5 +1,2 @@
-keys_shifted.bin
-keys_shifted.txt
-keys_unshifted.bin
-keys_unshifted.txt
-keys.txt
+*.bin
+*.txt
