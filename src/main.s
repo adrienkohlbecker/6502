@@ -1,8 +1,10 @@
 ; Memory Map
 ;
 ; 0000 0000 0000 0000 - 0000 0000 1111 1111 | 0000 - 00FF | Zero page
-; 0000 0000 0001 0000 - 0000 0001 1111 1111 | 0100 - 01FF | Stack
-; 0000 0000 0010 0000 - 0111 1111 1011 1111 | 0200 - 7FBF | RAM
+; 0000 0001 0000 0000 - 0000 0001 1111 1111 | 0100 - 01FF | Stack
+; 0000 0010 0000 0000 - 0001 1111 1111 1111 | 0200 - 1FFF | RAM (7680)
+; 0010 0000 0000 0000 - 0100 0101 1111 1111 | 2000 - 45FF | Framebuffer (9728)
+; 0110 0000 0000 0000 - 0111 1111 1011 1111 | 4600 - 7FBF | RAM (14784)
 ; 0111 1111 1100 0000 - 0111 1111 1111 1111 | 7FC0 - 07FF | I/O
 
 ; I/O:
@@ -38,10 +40,12 @@ KBS      = %00010000 ; keyboard shift register
 KB_VALID = %00001000 ; keyboard packet valid input
 
 ; zero page locations
-kb_wptr = $0000
-kb_rptr = $0001
-kb_flags = $0002
-kb_deadkey_flags = $0003
+kb_wptr = $0000 ; 1 byte
+kb_rptr = $0001 ; 1 byte
+kb_flags = $0002 ; 1 byte
+kb_deadkey_flags = $0003 ; 1 byte
+vidpage = $0004 ; 2 bytes
+start_color = $0006 ; 1 byte
 
 ; memory locations
 kb_buffer = $0200 ; 256-byte keyboard buffer 0200-02ff
@@ -52,6 +56,7 @@ kb_buffer = $0200 ; 256-byte keyboard buffer 0200-02ff
 
     include keyboard.s
     include lcd.s
+    include vga.s
     include binhex.s
 
 keymap: incbin "layout/keys_unshifted.bin"
@@ -110,10 +115,12 @@ init:
     lda #%0000110 ; Increment and shift cursor; don't shift display
     jsr lcd_instruction
 
-    stz kb_wptr ; initialize keyboard pointers to 0
+     ; initialize memory locations with 0
+    stz kb_wptr
     stz kb_rptr
     stz kb_flags
     stz kb_deadkey_flags
+    stz start_color
 
 loop:
     sei         ; pointers are set in interrupt, briefly disable interrupts while we read them
@@ -121,6 +128,8 @@ loop:
     cmp kb_wptr
     cli         ; re-enable interrupts
     bne key_pressed ; if the two pointers aren't equal, some key must have been pressed
+
+    jsr vga_loop
     jmp loop
 
 key_pressed:
