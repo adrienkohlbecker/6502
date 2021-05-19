@@ -14,9 +14,9 @@ SYNCSTRT = /Q0 * Q1 * /Q2 * /Q3 * Q4 * /Q5 * Q6 * Q7
 SYNCEND = /Q0 * Q1 * /Q2 * /Q3 * Q4 * Q5 * Q6 * Q7
 
 ; Count up to 264 = 100001000
-/RESET = /Q0 * /Q1 * /Q2 * Q3 * /Q4 * /Q5 * /Q6 * /Q7 * Q8
+RESET = /Q0 * /Q1 * /Q2 * Q3 * /Q4 * /Q5 * /Q6 * /Q7 * Q8
 
-DISPLAY = /RESET + DISPLAY * /DISPEND
-HSYNC = SYNCSTRT + HSYNC * /SYNCEND
+DISPLAY = RESET + DISPLAY * /DISPEND
+HSYNC = SYNCSTRT + HSYNC * /SYNCEND * /DISPLAY ; adding /DISPLAY so the power on state is valid
 
 DESCRIPTION
