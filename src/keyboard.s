@@ -156,13 +156,6 @@ handle_keycode
     rts ; return from handle_keycode
 
 .pressing_printable_key:
-    pha
-    jsr binhex
-    jsr print_char
-    txa
-    jsr print_char
-    pla
-
     tax
 
     bbs #ALTGR, kb_flags, .map_keycode_to_altgr_key
@@ -198,6 +191,8 @@ handle_keycode
     jsr push_key
 
     rts ; return from handle_keycode
+
+; TODO: for dead keys, the combination not working should shift cursor right again and revert to non dead key mode (print original key without flag)
 
 .map_keycode_to_diaeresis_key:
     rmb #DIAERESIS, kb_deadkey_flags

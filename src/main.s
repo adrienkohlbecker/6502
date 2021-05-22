@@ -241,6 +241,13 @@ exit_irq:
     pla
     rti
 
+; to test the VGA card with a static image, set a15 to 1
+
+    org $a000
+
+img: incbin "../vga_image_encode/fluffy.bin"
+
+
 ; === vector locations ===
 
     org $fffa
