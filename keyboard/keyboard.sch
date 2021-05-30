@@ -912,7 +912,7 @@ U 1 1 60C6C10B
 P 9750 2300
 F 0 "H1" V 9704 2450 50  0000 L CNN
 F 1 "MountingHole_Pad" V 9795 2450 50  0000 L CNN
-F 2 "MountingHole:MountingHole_2.7mm_M2.5_Pad" H 9750 2300 50  0001 C CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_Pad" H 9750 2300 50  0001 C CNN
 F 3 "~" H 9750 2300 50  0001 C CNN
 	1    9750 2300
 	0    1    1    0   
@@ -923,7 +923,7 @@ U 1 1 60C6C4F1
 P 9750 2500
 F 0 "H2" V 9704 2650 50  0000 L CNN
 F 1 "MountingHole_Pad" V 9795 2650 50  0000 L CNN
-F 2 "MountingHole:MountingHole_2.7mm_M2.5_Pad" H 9750 2500 50  0001 C CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_Pad" H 9750 2500 50  0001 C CNN
 F 3 "~" H 9750 2500 50  0001 C CNN
 	1    9750 2500
 	0    1    1    0   
@@ -934,7 +934,7 @@ U 1 1 60C6C5D3
 P 9750 2700
 F 0 "H3" V 9704 2850 50  0000 L CNN
 F 1 "MountingHole_Pad" V 9795 2850 50  0000 L CNN
-F 2 "MountingHole:MountingHole_2.7mm_M2.5_Pad" H 9750 2700 50  0001 C CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_Pad" H 9750 2700 50  0001 C CNN
 F 3 "~" H 9750 2700 50  0001 C CNN
 	1    9750 2700
 	0    1    1    0   
@@ -945,7 +945,7 @@ U 1 1 60C6C6FD
 P 9750 2900
 F 0 "H4" V 9704 3050 50  0000 L CNN
 F 1 "MountingHole_Pad" V 9795 3050 50  0000 L CNN
-F 2 "MountingHole:MountingHole_2.7mm_M2.5_Pad" H 9750 2900 50  0001 C CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_Pad" H 9750 2900 50  0001 C CNN
 F 3 "~" H 9750 2900 50  0001 C CNN
 	1    9750 2900
 	0    1    1    0   
@@ -1048,6 +1048,23 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 4600 1700 50  0001 C CNN
 	6    4600 1700
 	1    0    0    -1  
 $EndComp
+$Comp
+L Device:CP C8
+U 1 1 60B22BE5
+P 4050 7150
+F 0 "C8" H 4168 7196 50  0000 L CNN
+F 1 "1uF" H 4168 7105 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D4.0mm_P2.00mm" H 4088 7000 50  0001 C CNN
+F 3 "~" H 4050 7150 50  0001 C CNN
+	1    4050 7150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 7000 4050 7000
+Connection ~ 3550 7000
+Wire Wire Line
+	4050 7300 3550 7300
+Connection ~ 3550 7300
 Wire Bus Line
 	4900 5150 6800 5150
 Wire Bus Line
