@@ -37,10 +37,10 @@ I've been following Ben Eater's tutorials on building a 6502 computer and got fr
 
 This is a pretty standard section. A few things to note:
 
-- All input pins going to the expansion port have 10k pull-up resistors, so they can be driven high or low externally, so they default to high if not plugged in.
-- I'm not wiring the Phi1 and Phi2 ports from the CPU, as WDC discourages their use in the datasheet
+- All input pins going to the expansion port have 10k pull-up resistors, so they can be driven high or low externally, and they default to high if not plugged in.
+- I'm not wiring the Phi1 and Phi2 ports from the CPU, as WDC discourages their use in the datasheet.
 - Contrary to Ben's build, the ROM only outputs when a read cycle occurs. I plan to use this address space for writes to a frame buffer memory. This also saves the ROM if you were to advertently try to write to this address space.
-- I also wired the ROM's write-enable to the expansion port to play with building an EEPROM programmer later.
+- I wired the ROM's write-enable to the expansion port to play with building an EEPROM programmer later.
 
 ## Address decoding
 
@@ -50,6 +50,7 @@ This section takes in the address lines and provides select lines for the ROM, R
 
 - By using a 74HC133 13-input NAND gate, I'm able to make much more efficient use of the address space than Ben's build (See below)
 - Since the 74HC133 is obsolete and can be hard to find, I've also made the pinout compatible with a 74HC30 8-input NAND gate. In this case, addresses from `7F80` to `7FBF` are inaccessible (64 bytes).
+- Each I/O port gets 16 addresses, which is what VIAs need. Other chips I plan to use only need 4, like the ACIA, so 16 should cover most cases.
 
 ### Memory map
 
@@ -84,7 +85,7 @@ I'm using a 4-input AND gate here rather than wiring the signals together. Some 
 
 ![schematic_reset](./images/schematic_reset.png)
 
-The board includes a DS1813 reset circuit. It detects when the power goes on and pulls `RST` low for 150ms to allow every device to properly boot up, so I don't have to reset the processor manually each time. Additionally, it debounces the reset button, generating a 150ms pulse each time it is pressed. Finally, if the supplied voltage goes below a defined value, it also pulls `RST` low, protecting the components from under-voltage.
+The board includes a DS1813 reset circuit. It detects when the power goes on and pulls `RST` low for 150ms to allow every device to properly boot up, so I don't have to reset the processor manually. Additionally, it debounces the reset button, generating a 150ms pulse each time it is pressed. Finally, if the supplied voltage goes below a defined value, it also pulls `RST` low, protecting the components from under-voltage.
 
 ## Clock
 
@@ -93,8 +94,6 @@ The board includes a DS1813 reset circuit. It detects when the power goes on and
 The board includes a built-in oscillator with a jumper to plug in an external clock (like Ben's clock module). I'm running the CPU at 4Mhz at the moment.
 
 # BOM
-
-**Component Count:**34
 
 | Ref                                     | Qnty | Value        | Datasheet                                                    | Description                                                  |
 | --------------------------------------- | ---- | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -119,7 +118,7 @@ The board includes a built-in oscillator with a jumper to plug in an external cl
 ## Notes from the build, future improvements
 
 - Since a 1x50 pin header connector is impossible to find, I had to take five 1x10 connectors and join them together. Their sides are a bit bigger than the pin spacing, though, so I had to trim them using sandpaper. It makes them look a bit iffy, and for the next board, I'll go with a 40+10 with space in between
--If I pull the `RST` pin high during power-up by tying it to 5 volts with a jumper on the expansion port, I generate a short through the DS1813. Indeed, it drives the `RST` pin low by tying it to ground directly through a MOSFET, without a current limiting resistor. In my next board, I'll add a small current limiting resistor in series between the DS1813 and the other components
+- If I pull the `RST` pin high during power-up by tying it to 5 volts with a jumper on the expansion port, I generate a short through the DS1813. Indeed, it drives the `RST` pin low by tying it to ground directly, without a current limiting resistor. In my next board, I'll add a small current limiting resistor in series between the DS1813 and the other components
 - As mentioned above, the timing for the RAM is not theoretically met. In my next board, I'll use a fast GAL to implement the glue logic, which will solve the issue of propagation delays
 - The board is definitely missing some blinkenlights :-) I tried to keep it as compact as possible. Maybe I'll include at least a power LED?
 - I definitely should have left more space around the ZIF socket. It works as-is, but it is tight, and the handle rests against the CPU
