@@ -32,7 +32,7 @@ Pin 17 = DISPLAY      XOR = 1   AC1 = 1
 
 Pin 16 = SYNCEND      XOR = 1   AC1 = 1
  24  ---- ---- ---- ---- ---- ---- ---- ----
- 25  x--x -x-- -x-- x--- x--- x--- x--- ----
+ 25  -x-x x--- -x-- -x-- x--- x--- x--- x---
  26  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  27  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  28  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
@@ -42,7 +42,7 @@ Pin 16 = SYNCEND      XOR = 1   AC1 = 1
 
 Pin 15 = SYNCSTRT     XOR = 1   AC1 = 1
  32  ---- ---- ---- ---- ---- ---- ---- ----
- 33  x--x -x-- -x-- x--- -x-- x--- x--- ----
+ 33  -x-x x--- -x-- -x-- x--- -x-- x--- x---
  34  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  35  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  36  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
@@ -52,7 +52,7 @@ Pin 15 = SYNCSTRT     XOR = 1   AC1 = 1
 
 Pin 14 = DISPEND      XOR = 1   AC1 = 1
  40  ---- ---- ---- ---- ---- ---- ---- ----
- 41  -xx- -x-- x--- -x-- -x-- x--- x--- ----
+ 41  -xx- -x-- -x-- x--- -x-- -x-- x--- x---
  42  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  43  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  44  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
@@ -62,7 +62,7 @@ Pin 14 = DISPEND      XOR = 1   AC1 = 1
 
 Pin 13 = RESET        XOR = 0   AC1 = 1
  48  ---- ---- ---- ---- ---- ---- ---- ----
- 49  -x-x -x-- x--- -x-- -x-- -x-- -x-- x---
+ 49  -x-x -x-- -x-- x--- -x-- -x-- -x-- -xx-
  50  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  51  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  52  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
