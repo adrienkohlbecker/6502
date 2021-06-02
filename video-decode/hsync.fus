@@ -22,7 +22,7 @@ Pin 18 = HSYNC        XOR = 1   AC1 = 1
 
 Pin 17 = DISPLAY      XOR = 1   AC1 = 1
  16  ---- ---- ---- ---- ---- ---- ---- ----
- 17  ---- ---- ---- ---- ---- ---- --x- ----
+ 17  ---- ---- ---- ---- ---- ---- ---x ----
  18  ---- ---- --x- ---- ---- ---x ---- ----
  19  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  20  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
@@ -52,7 +52,7 @@ Pin 15 = SYNCSTRT     XOR = 1   AC1 = 1
 
 Pin 14 = DISPEND      XOR = 1   AC1 = 1
  40  ---- ---- ---- ---- ---- ---- ---- ----
- 41  -x-x -x-- x--- -x-- -x-- x--- x--- ----
+ 41  -xx- -x-- x--- -x-- -x-- x--- x--- ----
  42  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  43  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  44  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
@@ -60,7 +60,7 @@ Pin 14 = DISPEND      XOR = 1   AC1 = 1
  46  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  47  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
 
-Pin 13 = RESET        XOR = 1   AC1 = 1
+Pin 13 = RESET        XOR = 0   AC1 = 1
  48  ---- ---- ---- ---- ---- ---- ---- ----
  49  -x-x -x-- x--- -x-- -x-- -x-- -x-- x---
  50  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx

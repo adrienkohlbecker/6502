@@ -1,10 +1,11 @@
 from PIL import Image
 import struct
+import os
 
 # Options to set up
 file = "fluffy.jpg"
 dither = True
-showPreview = True
+disablePreview = os.getenv('DISABLE_PREVIEW', None)
 
 # Palette code based off of https://stackoverflow.com/a/29438149/2303432
 
@@ -39,13 +40,13 @@ quant = cropped.im.convert("P", 1 if dither else 0, palimage.im)
 pixels = image._new(quant).load()
 
 # If enabled, show a preview of the final image
-if showPreview:
+if not disablePreview:
   image._new(quant).show()
 
 # Write binary file for EEPROM
 out_file = open(file.replace('png', 'bin').replace('jpg', 'bin'), "wb")
 
-for y in range(64):
+for y in range(128):
   for x in range(128):
     try:
       out_file.write(struct.pack("B", pixels[x, y]))
