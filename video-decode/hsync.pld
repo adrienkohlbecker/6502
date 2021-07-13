@@ -4,17 +4,17 @@ Video H sync generator
 Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 Q8 GND
 Q9 NC RESET DISPEND SYNCSTRT SYNCEND DISPLAY HSYNC NC VCC
 
-; Count up to 401 = 110010001
-DISPEND = Q0 * /Q1 * /Q2 * /Q3 * Q4 * /Q5 * /Q6 * Q7 * Q8
+; Count up to 640+1 = 1010000001
+DISPEND = Q0 * /Q1 * /Q2 * /Q3 * /Q4 * /Q5 * /Q6 * Q7 * /Q8 * Q9
 
-; Count up to 420 = 110100100
-SYNCSTRT = /Q0 * /Q1 * Q2 * /Q3 * /Q4 * Q5 * /Q6 * Q7 * Q8
+; Count up to 656 = 1010010000
+SYNCSTRT = /Q0 * /Q1 * /Q2 * /Q3 * Q4 * /Q5 * /Q6 * Q7 * /Q8 * Q9
 
-; Count up to 484 = 111100100
-SYNCEND = /Q0 * /Q1 * Q2 * /Q3 * /Q4 * Q5 * Q6 * Q7 * Q8
+; Count up to 752 = 1011110000
+SYNCEND = /Q0 * /Q1 * /Q2 * /Q3 * Q4 * Q5 * Q6 * Q7 * /Q8 * Q9
 
-; Count up to 528 = 1000010000
-/RESET = /Q0 * /Q1 * /Q2 * /Q3 * Q4 * /Q5 * /Q6 * /Q7 * /Q8 * Q9
+; Count up to 800 = 1100100000
+/RESET = /Q0 * /Q1 * /Q2 * /Q3 * /Q4 * Q5 * /Q6 * /Q7 * Q8 * Q9
 
 DISPLAY = /RESET + DISPLAY * /DISPEND
 HSYNC = SYNCSTRT + HSYNC * /SYNCEND * /DISPLAY ; adding /DISPLAY so the power on state is valid

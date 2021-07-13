@@ -7,6 +7,9 @@ file = "fluffy.jpg"
 dither = True
 disablePreview = os.getenv('DISABLE_PREVIEW', None)
 
+WIDTH = 160
+HEIGHT = 120
+
 # Palette code based off of https://stackoverflow.com/a/29438149/2303432
 
 # Generate palette
@@ -28,11 +31,11 @@ image = Image.open(file)
 # Resize image (cropping and resizing as needed without stretching)
 horiz = image.width > image.height
 ratio = float(image.width) / float(image.height)
-newSize = (int(ratio * 75) if horiz else 100, int((1 / ratio) * 100) if not horiz else 75)
+newSize = (int(ratio * HEIGHT) if horiz else WIDTH, int((1 / ratio) * WIDTH) if not horiz else HEIGHT)
 resized = image.resize(newSize)
 
-topLeft = (int((resized.width - 100) / 2) if horiz else 0, int((resized.height - 75) / 2) if not horiz else 0)
-crop = (topLeft[0], topLeft[1], topLeft[0] + 100, topLeft[1] + 75)
+topLeft = (int((resized.width - WIDTH) / 2) if horiz else 0, int((resized.height - HEIGHT) / 2) if not horiz else 0)
+crop = (topLeft[0], topLeft[1], topLeft[0] + WIDTH, topLeft[1] + HEIGHT)
 cropped = resized.crop(crop)
 
 # Quantize image (convert to color palette)
@@ -47,7 +50,7 @@ if not disablePreview:
 out_file = open(file.replace('png', 'bin').replace('jpg', 'bin'), "wb")
 
 for y in range(128):
-  for x in range(128):
+  for x in range(256):
     try:
       out_file.write(struct.pack("B", pixels[x, y]))
     except IndexError:

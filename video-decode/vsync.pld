@@ -4,17 +4,17 @@ Video V sync generator
 Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 Q8 GND
 Q9 NC RESET DISPEND SYNCSTRT SYNCEND DISPLAY VSYNC NC VCC
 
-; Count up to 600 = 1001011000
-DISPEND = /Q0 * /Q1 * /Q2 * Q3 * Q4 * /Q5 * Q6 * /Q7 * /Q8 * Q9
+; Count up to 480 = 111100000
+DISPEND = /Q0 * /Q1 * /Q2 * /Q3 * /Q4 * Q5 * Q6 * Q7 * Q8
 
-; Count up to 601 = 1001011001
-SYNCSTRT = Q0 * /Q1 * /Q2 * Q3 * Q4 * /Q5 * Q6 * /Q7 * /Q8 * Q9
+; Count up to 490 = 111101010
+SYNCSTRT = /Q0 * Q1 * /Q2 * Q3 * /Q4 * Q5 * Q6 * Q7 * Q8
 
-; Count up to 605 = 1001011101
-SYNCEND = Q0 * /Q1 * Q2 * Q3 * Q4 * /Q5 * Q6 * /Q7 * /Q8 * Q9
+; Count up to 492 = 111101110
+SYNCEND = /Q0 * Q1 * Q2 * Q3 * /Q4 * Q5 * Q6 * Q7 * Q8
 
-; Count up to 628 = 1001110100
-RESET = /Q0 * /Q1 * Q2 * /Q3 * Q4 * Q5 * Q6 * /Q7 * /Q8 * Q9
+; Count up to 525 = 1000001101
+RESET = Q0 * /Q1 * Q2 * Q3 * /Q4 * /Q5 * /Q6 * /Q7 * /Q8 * Q9
 
 DISPLAY = RESET + DISPLAY * /DISPEND
 VSYNC = SYNCSTRT + VSYNC * /SYNCEND * /DISPLAY ; adding /DISPLAY so the power on state is correct
