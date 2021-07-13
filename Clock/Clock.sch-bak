@@ -1070,7 +1070,7 @@ U 1 1 61029439
 P 6750 1700
 F 0 "J2" H 6750 2000 50  0000 L CNN
 F 1 "Clock Select" H 6550 1900 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" H 6750 1700 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical" H 6750 1700 50  0001 C CNN
 F 3 "~" H 6750 1700 50  0001 C CNN
 	1    6750 1700
 	1    0    0    -1  
@@ -1123,7 +1123,7 @@ U 1 1 6129E50E
 P 4350 5450
 F 0 "J1" H 4300 5200 50  0000 L CNN
 F 1 "Reset Mode" H 4150 5100 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" H 4350 5450 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical" H 4350 5450 50  0001 C CNN
 F 3 "~" H 4350 5450 50  0001 C CNN
 	1    4350 5450
 	1    0    0    -1  
@@ -1390,7 +1390,7 @@ U 1 1 61570CD1
 P 10550 1200
 F 0 "J3" H 10630 1242 50  0000 L CNN
 F 1 "I/O" H 10630 1151 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" H 10550 1200 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x07_P2.54mm_Vertical" H 10550 1200 50  0001 C CNN
 F 3 "~" H 10550 1200 50  0001 C CNN
 	1    10550 1200
 	1    0    0    -1  
