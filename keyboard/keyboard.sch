@@ -19,14 +19,14 @@ U 1 1 60A3F33E
 P 1700 1800
 F 0 "J1" H 1700 2167 50  0000 C CNN
 F 1 "Mini-DIN-6" H 1700 2076 50  0000 C CNN
-F 2 "AK's_Footprints:Mini_din6" H 1700 1800 50  0001 C CNN
+F 2 "AK's_Footprints:PS2_mini_din_6" H 1700 1800 50  0000 C CNN
 F 3 "http://service.powerdynamics.com/ec/Catalog17/Section%2011.pdf" H 1700 1800 50  0001 C CNN
 	1    1700 1800
 	1    0    0    -1  
 $EndComp
-Text GLabel 2300 1900 2    50   Output ~ 0
+Text GLabel 2800 1900 2    50   Output ~ 0
 KBD_DATA
-Text GLabel 2300 1700 2    50   Output ~ 0
+Text GLabel 2800 1700 2    50   Output ~ 0
 KBD_CLK
 $Comp
 L power:GND #PWR02
@@ -166,7 +166,7 @@ Entry Wire Line
 	3750 4900 3850 5000
 Text GLabel 4050 1700 0    50   Input ~ 0
 KBD_CLK
-Text GLabel 5000 1700 2    50   Output ~ 0
+Text GLabel 5300 1700 2    50   Output ~ 0
 ~REG_CLK
 Text GLabel 2650 3100 0    50   Input ~ 0
 ~REG_CLK
@@ -196,8 +196,6 @@ Wire Wire Line
 	4900 1450 5000 1450
 Wire Wire Line
 	4900 1700 4900 1450
-Wire Wire Line
-	4900 1700 5000 1700
 Connection ~ 4900 1700
 $Comp
 L power:VCC #PWR09
@@ -221,7 +219,7 @@ F 3 "" H 5600 1150 50  0001 C CNN
 	1    5600 1150
 	1    0    0    -1  
 $EndComp
-Text GLabel 6200 1250 2    50   Output ~ 0
+Text GLabel 6600 1250 2    50   Output ~ 0
 ~LATCH_CLK
 Text GLabel 2450 3400 0    50   Input ~ 0
 ~LATCH_CLK
@@ -705,7 +703,7 @@ Wire Wire Line
 	2150 1700 2150 1600
 Connection ~ 2150 1700
 Wire Wire Line
-	2150 1700 2300 1700
+	2150 1700 2500 1700
 $Comp
 L Device:R R2
 U 1 1 60B61B98
@@ -733,8 +731,6 @@ Wire Wire Line
 Wire Wire Line
 	2000 1900 2250 1900
 Connection ~ 2250 1900
-Wire Wire Line
-	2250 1900 2300 1900
 $Comp
 L power:VCC #PWR0101
 U 1 1 60B706EB
@@ -1053,7 +1049,7 @@ L Device:CP C8
 U 1 1 60B22BE5
 P 4050 7150
 F 0 "C8" H 4168 7196 50  0000 L CNN
-F 1 "1uF" H 4168 7105 50  0000 L CNN
+F 1 "10uF" H 4168 7105 50  0000 L CNN
 F 2 "Capacitor_THT:CP_Radial_D4.0mm_P2.00mm" H 4088 7000 50  0001 C CNN
 F 3 "~" H 4050 7150 50  0001 C CNN
 	1    4050 7150
@@ -1065,6 +1061,84 @@ Connection ~ 3550 7000
 Wire Wire Line
 	4050 7300 3550 7300
 Connection ~ 3550 7300
+Connection ~ 2500 1700
+Wire Wire Line
+	2500 1700 2800 1700
+$Comp
+L Connector:TestPoint TP2
+U 1 1 6193978F
+P 6350 1150
+F 0 "TP2" H 6408 1268 50  0000 L CNN
+F 1 "LATCH_CLK" H 6408 1177 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Loop_D2.60mm_Drill1.6mm_Beaded" H 6550 1150 50  0001 C CNN
+F 3 "~" H 6550 1150 50  0001 C CNN
+	1    6350 1150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4900 1700 5050 1700
+$Comp
+L Connector:TestPoint TP1
+U 1 1 6193AD45
+P 5050 1750
+F 0 "TP1" H 4992 1776 50  0000 R CNN
+F 1 "REG_CLK" H 4992 1867 50  0000 R CNN
+F 2 "TestPoint:TestPoint_Loop_D2.60mm_Drill1.6mm_Beaded" H 5250 1750 50  0001 C CNN
+F 3 "~" H 5250 1750 50  0001 C CNN
+	1    5050 1750
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	6200 1250 6350 1250
+Wire Wire Line
+	6350 1150 6350 1250
+Connection ~ 6350 1250
+Wire Wire Line
+	6350 1250 6600 1250
+Wire Wire Line
+	5050 1750 5050 1700
+Connection ~ 5050 1700
+Wire Wire Line
+	5050 1700 5300 1700
+$Comp
+L Connector:TestPoint TP3
+U 1 1 6194C173
+P 7000 1800
+F 0 "TP3" H 7058 1918 50  0000 L CNN
+F 1 "GND" H 7058 1827 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Loop_D2.60mm_Drill1.6mm_Beaded" H 7200 1800 50  0001 C CNN
+F 3 "~" H 7200 1800 50  0001 C CNN
+	1    7000 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0106
+U 1 1 6194C5AC
+P 7000 1800
+F 0 "#PWR0106" H 7000 1550 50  0001 C CNN
+F 1 "GND" H 7005 1627 50  0000 C CNN
+F 2 "" H 7000 1800 50  0001 C CNN
+F 3 "" H 7000 1800 50  0001 C CNN
+	1    7000 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J3
+U 1 1 619635EB
+P 2500 1150
+F 0 "J3" V 2464 962 50  0000 R CNN
+F 1 "KBD" V 2373 962 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 2500 1150 50  0001 C CNN
+F 3 "~" H 2500 1150 50  0001 C CNN
+	1    2500 1150
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2500 1350 2500 1700
+Wire Wire Line
+	2250 1900 2600 1900
+Wire Wire Line
+	2600 1350 2600 1900
 Wire Bus Line
 	4900 5150 6800 5150
 Wire Bus Line
@@ -1073,4 +1147,7 @@ Wire Bus Line
 	6800 3400 6800 5150
 Wire Bus Line
 	3850 3000 3850 5150
+Connection ~ 2600 1900
+Wire Wire Line
+	2600 1900 2800 1900
 $EndSCHEMATC
