@@ -50,7 +50,7 @@ if not disablePreview:
 out_file = open(file.replace('png', 'bin').replace('jpg', 'bin'), "wb")
 
 for y in range(128):
-  for x in range(256):
+  for x in range(128):
     try:
       out_file.write(struct.pack("B", pixels[x, y]))
     except IndexError:

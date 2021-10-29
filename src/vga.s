@@ -1,11 +1,11 @@
 vga_loop:
   ; initialize vidpage to beginning of video ram $2000
-  lda #$20
+  lda #$02
   sta vidpage + 1
   lda #$00
   sta vidpage
 
-  ldx #$26 ; X will count down how many pages of video RAM to go
+  ldx #$76 ; X will count down how many pages of video RAM to go
   ldy #$0 ; populate a page starting at 0
   inc start_color
   lda start_color ; color of pixel
