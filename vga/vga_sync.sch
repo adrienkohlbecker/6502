@@ -658,7 +658,6 @@ F 3 "" H 9050 1600 50  0001 C CNN
 	1    9050 1600
 	1    0    0    -1  
 $EndComp
-NoConn ~ 9500 1350
 Text GLabel 9150 2150 2    50   Output ~ 0
 RST525
 Wire Wire Line
@@ -712,7 +711,7 @@ F 3 "https://www.mouser.com/datasheet/2/149/74AC74-17555.pdf" H 4350 3850 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L AK's_Library:74AC04 U6
+L vga_sync-rescue:74AC04-AK's_Library U6
 U 2 1 60F69C18
 P 4200 7050
 F 0 "U6" H 4200 6850 50  0000 C CNN
@@ -939,7 +938,7 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS10" H 9950 5200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L AK's_Library:74AC04 U6
+L vga_sync-rescue:74AC04-AK's_Library U6
 U 6 1 611EF68B
 P 9000 5700
 F 0 "U6" H 9000 6017 50  0000 C CNN
@@ -958,7 +957,7 @@ V3
 Text GLabel 7800 4950 0    50   Input ~ 0
 V4
 $Comp
-L AK's_Library:74AC04 U6
+L vga_sync-rescue:74AC04-AK's_Library U6
 U 5 1 611EF671
 P 8100 4950
 F 0 "U6" H 8100 5267 50  0000 C CNN
@@ -969,7 +968,7 @@ F 3 "http://www.ti.com/lit/gpn/sn74AC04" H 8100 4950 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L AK's_Library:74AC04 U6
+L vga_sync-rescue:74AC04-AK's_Library U6
 U 4 1 6129E13B
 P 8050 4450
 F 0 "U6" H 8050 4767 50  0000 C CNN
@@ -1052,7 +1051,7 @@ Connection ~ 5450 1950
 Wire Wire Line
 	5450 1950 5850 1950
 $Comp
-L AK's_Library:74AC04 U6
+L vga_sync-rescue:74AC04-AK's_Library U6
 U 1 1 60FB462D
 P 3250 4450
 F 0 "U6" H 3250 4767 50  0000 C CNN
@@ -1264,7 +1263,7 @@ HSYNC
 Text GLabel 3950 950  0    50   Input ~ 0
 HSYNC
 $Comp
-L AK's_Library:74AC04 U6
+L vga_sync-rescue:74AC04-AK's_Library U6
 U 3 1 6109C809
 P 4850 1100
 F 0 "U6" H 4850 900 50  0000 C CNN
@@ -1309,26 +1308,8 @@ F 3 "" H 12300 8750 50  0001 C CNN
 	1    12300 8750
 	1    0    0    -1  
 $EndComp
-$Comp
-L 74xx:74LS574 U19
-U 1 1 611729CA
-P 12300 7950
-F 0 "U19" H 12050 8600 50  0000 C CNN
-F 1 "74AC574" H 12600 8600 50  0000 C CNN
-F 2 "Package_DIP:DIP-20_W7.62mm_Socket" H 12300 7950 50  0001 C CNN
-F 3 "https://www.ti.com/lit/ds/symlink/sn74ac574.pdf" H 12300 7950 50  0001 C CNN
-	1    12300 7950
-	1    0    0    -1  
-$EndComp
 Text GLabel 11800 5700 0    50   Input ~ 0
 V9
-NoConn ~ 11800 5800
-NoConn ~ 11800 5900
-NoConn ~ 11800 6000
-NoConn ~ 11800 6100
-NoConn ~ 11800 7950
-NoConn ~ 11800 8050
-NoConn ~ 11800 8150
 Wire Wire Line
 	12800 5400 13600 5400
 Wire Wire Line
@@ -1340,15 +1321,9 @@ Wire Wire Line
 Wire Wire Line
 	12800 5700 13750 5700
 Wire Wire Line
-	13900 7650 12800 7650
-Wire Wire Line
-	12800 7750 13950 7750
-Wire Wire Line
 	12800 7450 13800 7450
 Wire Wire Line
 	12800 7550 13850 7550
-Wire Wire Line
-	14000 7850 12800 7850
 Text GLabel 11800 8350 0    50   Input ~ 0
 PXL_CLK
 Text GLabel 11800 8450 0    50   Input ~ 0
@@ -1357,9 +1332,6 @@ NoConn ~ 12800 5800
 NoConn ~ 12800 5900
 NoConn ~ 12800 6000
 NoConn ~ 12800 6100
-NoConn ~ 12800 7950
-NoConn ~ 12800 8050
-NoConn ~ 12800 8150
 Text GLabel 14600 1750 0    50   Output ~ 0
 ~OE2
 Text GLabel 14600 2050 0    50   Input ~ 0
@@ -1466,15 +1438,9 @@ $EndComp
 Wire Wire Line
 	14600 5350 14000 5350
 Wire Wire Line
-	14000 5350 14000 7850
-Wire Wire Line
 	14600 5150 13950 5150
 Wire Wire Line
-	13950 5150 13950 7750
-Wire Wire Line
 	14600 5050 13900 5050
-Wire Wire Line
-	13900 5050 13900 7650
 Wire Wire Line
 	14600 4850 13850 4850
 Wire Wire Line
@@ -2499,4 +2465,137 @@ F 3 "" H 10300 2100 50  0001 C CNN
 	1    10300 2100
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	11800 6100 11800 6000
+Connection ~ 11800 5900
+Wire Wire Line
+	11800 5900 11800 5800
+Connection ~ 11800 6000
+Wire Wire Line
+	11800 6000 11800 5900
+Wire Wire Line
+	11800 6000 11550 6000
+$Comp
+L power:VCC #PWR061
+U 1 1 613B32CA
+P 11550 6000
+F 0 "#PWR061" H 11550 5850 50  0001 C CNN
+F 1 "VCC" H 11565 6173 50  0000 C CNN
+F 2 "" H 11550 6000 50  0001 C CNN
+F 3 "" H 11550 6000 50  0001 C CNN
+	1    11550 6000
+	1    0    0    -1  
+$EndComp
+NoConn ~ 9500 1350
+$Comp
+L Jumper:SolderJumper_3_Open JP3
+U 1 1 613B46BF
+P 13700 7850
+F 0 "JP3" V 13750 7400 50  0000 L CNN
+F 1 "DISPLAY" V 13650 7200 50  0000 L CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm" H 13700 7850 50  0001 C CNN
+F 3 "~" H 13700 7850 50  0001 C CNN
+	1    13700 7850
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	12800 7650 12900 7650
+Wire Wire Line
+	13900 7850 13850 7850
+Wire Wire Line
+	13900 5050 13900 7850
+Wire Wire Line
+	12800 7950 13250 7950
+Wire Wire Line
+	13250 7950 13250 8050
+Wire Wire Line
+	13250 8050 13700 8050
+$Comp
+L Jumper:SolderJumper_3_Open JP2
+U 1 1 613FA13F
+P 13550 8350
+F 0 "JP2" V 13600 7750 50  0000 L CNN
+F 1 "HSYNC" V 13500 7600 50  0000 L CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm" H 13550 8350 50  0001 C CNN
+F 3 "~" H 13550 8350 50  0001 C CNN
+	1    13550 8350
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	13950 8350 13700 8350
+Wire Wire Line
+	13950 5150 13950 8350
+Wire Wire Line
+	12800 7750 13000 7750
+Wire Wire Line
+	13550 7750 13550 8150
+Wire Wire Line
+	12800 8050 13200 8050
+Wire Wire Line
+	13200 8050 13200 8550
+Wire Wire Line
+	13200 8550 13550 8550
+Wire Wire Line
+	14000 8800 13550 8800
+Wire Wire Line
+	14000 5350 14000 8800
+Wire Wire Line
+	13400 8600 13400 7850
+Wire Wire Line
+	13400 7850 13100 7850
+Wire Wire Line
+	12800 8150 13100 8150
+Wire Wire Line
+	13100 8150 13100 9000
+Wire Wire Line
+	13100 9000 13400 9000
+$Comp
+L Jumper:SolderJumper_3_Open JP1
+U 1 1 614427ED
+P 13400 8800
+F 0 "JP1" V 13450 8050 50  0000 L CNN
+F 1 "VSYNC" V 13350 7900 50  0000 L CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm" H 13400 8800 50  0001 C CNN
+F 3 "~" H 13400 8800 50  0001 C CNN
+	1    13400 8800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L 74xx:74LS574 U19
+U 1 1 611729CA
+P 12300 7950
+F 0 "U19" H 12050 8600 50  0000 C CNN
+F 1 "74AC574" H 12600 8600 50  0000 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket" H 12300 7950 50  0001 C CNN
+F 3 "https://www.ti.com/lit/ds/symlink/sn74ac574.pdf" H 12300 7950 50  0001 C CNN
+	1    12300 7950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	12900 7650 12900 7900
+Wire Wire Line
+	12900 7900 11800 7900
+Wire Wire Line
+	11800 7900 11800 7950
+Connection ~ 12900 7650
+Wire Wire Line
+	12900 7650 13700 7650
+Wire Wire Line
+	13000 7750 13000 8000
+Wire Wire Line
+	13000 8000 11800 8000
+Wire Wire Line
+	11800 8000 11800 8050
+Connection ~ 13000 7750
+Wire Wire Line
+	13000 7750 13550 7750
+Wire Wire Line
+	13100 7850 13100 8100
+Wire Wire Line
+	13100 8100 11800 8100
+Wire Wire Line
+	11800 8100 11800 8150
+Connection ~ 13100 7850
+Wire Wire Line
+	13100 7850 12800 7850
 $EndSCHEMATC
