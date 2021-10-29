@@ -2166,4 +2166,6 @@ F 3 "74xx/74hc_hct74.pdf" H -2350 6650 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3700 1400 4350 1400
+Text Notes 8350 3550 0    50   ~ 0
+TODO gate rst by clock ?
 $EndSCHEMATC
