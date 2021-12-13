@@ -1,0 +1,15 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ATF16V8C
+D Programmable Logic Array
+K GAL PLD 16V8
+F http://ww1.microchip.com/downloads/en/devicedoc/atmel-0425-pld-atf16v8c-datasheet.pdf
+$ENDCMP
+#
+$CMP ATF22V10C
+D Programmable Logic Array
+K GAL PLD 22V10
+F http://ww1.microchip.com/downloads/en/devicedoc/doc0735.pdf
+$ENDCMP
+#
+#End Doc Library

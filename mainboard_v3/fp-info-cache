@@ -1,4 +1,32 @@
-19083345870695198
+19242237260225312
+AK's_Footprints
+P0915NQC15AR500K
+P0915N-QC15AR500K-7
+Variable Resistor
+0
+5
+5
+AK's_Footprints
+PS2_mini_din_6
+
+MINI DIN
+0
+9
+7
+AK's_Footprints
+PinSocket_1x50_P2.54mm_Vertical
+Through hole straight socket strip, 1x40, 2.54mm pitch, single row (from Kicad 4.0.7), script generated
+Through hole socket strip THT 1x40 2.54mm single row
+0
+50
+50
+AK's_Footprints
+Potentiometer_P160KN-0QC15C500K
+Potentiometer, horizontal
+Potentiometer horizontal
+0
+3
+3
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -83026,10 +83054,94 @@ varistor SIOV
 0
 2
 2
-mainboard_v2
-PinSocket_1x50_P2.54mm_Vertical
-Through hole straight socket strip, 1x40, 2.54mm pitch, single row (from Kicad 4.0.7), script generated
-Through hole socket strip THT 1x40 2.54mm single row
+keyboard
+4ucon-20153_reversible
+
+
 0
-50
-50
+8
+4
+keyboard
+BREAKOUT
+
+
+0
+6
+6
+keyboard
+Crystal_SMD_SeikoEpson_FA238-4pin_3.2x2.5mm_HandSoldering
+crystal Epson Toyocom FA-238 series http://www.mouser.com/ds/2/137/1721499-465440.pdf, hand-soldering, 3.2x2.5mm^2 package
+SMD SMT crystal hand-soldering
+0
+4
+4
+keyboard
+Kailh-socket-mirrorable
+
+
+0
+6
+2
+keyboard
+Kailh-socket-mirrorable-2u
+
+
+0
+12
+2
+keyboard
+MX1A
+
+
+0
+6
+6
+keyboard
+MX1A-X1DGW
+
+
+0
+6
+6
+keyboard
+MX1A-X1DN
+
+
+0
+4
+4
+keyboard
+MX1A-X1DW
+
+
+0
+4
+4
+keyboard
+MX1A-X1GN
+
+
+0
+4
+4
+keyboard
+MX1A-X1GW
+
+
+0
+4
+4
+keyboard
+MX1A-X1NN
+
+
+0
+2
+2
+keyboard
+MX1A-X1NW
+
+
+0
+2
+2
