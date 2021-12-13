@@ -23,15 +23,6 @@ IO_1_IFR   = $7FCD ; Address of interupt flag register
 IO_1_IER   = $7FCE ; Address of interupt enable register
 IO_1_PCR   = $7FCC ; Address of peripheral control register
 
-; IO #2
-IO_2_DDRA  = $7FD3 ; Address of data direction register for PORT A
-IO_2_DDRB  = $7FD2 ; Address of data direction register for PORT B
-IO_2_PORTA = $7FD1 ; Address of PORT A
-IO_2_PORTB = $7FD0 ; Address of PORT B
-IO_2_IFR   = $7FDD ; Address of interupt flag register
-IO_2_IER   = $7FDE ; Address of interupt enable register
-IO_2_PCR   = $7FDC ; Address of peripheral control register
-
 ; PORT A signal to pin mapping
 E        = %10000000 ; LCD Enable
 RW       = %01000000 ; LCD RW
@@ -78,30 +69,22 @@ init:
     cli ; enable interrupt handling
 
     lda #%10010000 ; enable interrupt on CB1
-    sta IO_2_IFR
+    sta IO_1_IFR
 
     lda #%10010000 ; enable interrupt on CB1
-    sta IO_2_IER
+    sta IO_1_IER
 
     lda #%00010000 ; Set CB1 to positive going edge
-    sta IO_2_PCR
+    sta IO_1_PCR
 
     stz IO_1_PORTA ; ensure all ports are 0
     stz IO_1_PORTB
-    stz IO_2_PORTA
-    stz IO_2_PORTB
 
-    lda #%11100000 ; Set top 3 pins of IO_1_PORTA to output
+    lda #%11110000 ; Set top 4 pins of IO_1_PORTA to output
     sta IO_1_DDRA
 
     lda #%11111111 ; Set all pins of IO_1_PORTB to output
     sta IO_1_DDRB
-
-    lda #%00010000 ; Set top 4th pins of IO_2_PORTA to output
-    sta IO_2_DDRA
-
-    lda #%11111111 ; Set all pins of IO_2_PORTB to output
-    sta IO_2_DDRB
 
     lda #%00000001 ; Clear display
     jsr lcd_instruction
@@ -204,22 +187,22 @@ irq:
     phy
 
     lda #%00000000 ; PORT B is input
-    sta IO_2_DDRB
+    sta IO_1_DDRB
 
     lda #KBS ; Enable shift register output
-    sta IO_2_PORTA
+    sta IO_1_PORTA
 
-    lda IO_2_PORTB ; read scan code into A register
+    lda IO_1_PORTB ; read scan code into A register
     pha
 
-    lda IO_2_PORTA ; read if the packet is valid
+    lda IO_1_PORTA ; read if the packet is valid
     pha
 
     lda #%00000000 ; disable shift register output
-    sta IO_2_PORTA
+    sta IO_1_PORTA
 
     lda #%11111111 ; PORT B is output
-    sta IO_2_DDRB
+    sta IO_1_DDRB
 
     pla
     and #KB_VALID
