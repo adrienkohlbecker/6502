@@ -45,6 +45,9 @@ void setup() {
   pinMode(PIN_RIGHT_DIGIT, OUTPUT);
   pinMode(PIN_MODE, INPUT_PULLUP);
 
+  digitalWrite(PIN_RIGHT_DIGIT, HIGH);
+  digitalWrite(PIN_LEFT_DIGIT, HIGH);
+
   isLatch = digitalRead(PIN_MODE);
   if (isLatch) {
     pinMode(PIN_LE, INPUT_PULLUP);
@@ -103,15 +106,15 @@ void loop() {
     digit = value >> 4;
     PORTD=(zeroIn && digit == 0) ? 0 : font[digit];
     
-    digitalWrite(PIN_LEFT_DIGIT, HIGH);
-    delay(1);
     digitalWrite(PIN_LEFT_DIGIT, LOW);
+    delay(1);
+    digitalWrite(PIN_LEFT_DIGIT, HIGH);
 
     // right digit
     digit = value & 0b00001111;
     PORTD=(zeroIn && value == 0) ? 0 : font[digit];
     
-    digitalWrite(PIN_RIGHT_DIGIT, HIGH);
-    delay(1);
     digitalWrite(PIN_RIGHT_DIGIT, LOW);
+    delay(1);
+    digitalWrite(PIN_RIGHT_DIGIT, HIGH);
 }

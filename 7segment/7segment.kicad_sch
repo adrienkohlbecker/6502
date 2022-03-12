@@ -1449,6 +1449,12 @@
     (uuid fef37e8b-0ff0-4da2-8a57-acaf19551d1a)
   )
 
+  (text "At 50% duty cycle:\nRed    270 ohms\nGreen  120 ohms\nYellow 100 ohms"
+    (at 243.84 77.47 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 63370fca-6280-4987-af4c-643abbcb4a98)
+  )
+
   (label "DIG_F" (at 236.22 74.93 180)
     (effects (font (size 1.27 1.27)) (justify right bottom))
     (uuid 097edb1b-8998-4e70-b670-bba125982348)
