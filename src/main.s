@@ -24,11 +24,11 @@ IO_1_IER   = $7FCE ; Address of interupt enable register
 IO_1_PCR   = $7FCC ; Address of peripheral control register
 
 ; PORT A signal to pin mapping
-E        = %10000000 ; LCD Enable
-RW       = %01000000 ; LCD RW
-RS       = %00100000 ; LCD register select
-KBS      = %00010000 ; keyboard shift register
-KB_VALID = %00001000 ; keyboard packet valid input
+E        = %00000001 ; LCD Enable
+RW       = %00000010 ; LCD RW
+RS       = %00000100 ; LCD register select
+KBS      = %00001000 ; keyboard shift register
+KB_VALID = %00010000 ; keyboard packet valid input
 
 ; zero page locations
 kb_wptr = $0000 ; 1 byte
@@ -80,7 +80,7 @@ init:
     stz IO_1_PORTA ; ensure all ports are 0
     stz IO_1_PORTB
 
-    lda #%11110000 ; Set top 4 pins of IO_1_PORTA to output
+    lda #%00001111 ; Set bottom 4 pins of IO_1_PORTA to output
     sta IO_1_DDRA
 
     lda #%11111111 ; Set all pins of IO_1_PORTB to output
@@ -104,6 +104,11 @@ init:
     stz kb_flags
     stz kb_deadkey_flags
     stz start_color
+
+    lda # ">"
+    jsr print_char
+    lda # " "
+    jsr print_char
 
 loop:
     sei         ; pointers are set in interrupt, briefly disable interrupts while we read them
@@ -139,7 +144,7 @@ handle_keypress:
     beq left_arrow
 
     jsr print_char
-    rts
+    ; fallthrough
 
 exit_handle_keypress:
     rts
