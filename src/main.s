@@ -23,7 +23,7 @@ IO_1_IFR   = $7FCD ; Address of interupt flag register
 IO_1_IER   = $7FCE ; Address of interupt enable register
 IO_1_PCR   = $7FCC ; Address of peripheral control register
 
-; PORT A signal to pin mapping
+; PORT B signal to pin mapping
 E        = %00000001 ; LCD Enable
 RW       = %00000010 ; LCD RW
 RS       = %00000100 ; LCD register select
@@ -68,22 +68,19 @@ init:
 
     cli ; enable interrupt handling
 
-    lda #%10010000 ; enable interrupt on CB1
-    sta IO_1_IFR
-
-    lda #%10010000 ; enable interrupt on CB1
+    lda #%10000010 ; enable interrupt on CA1
     sta IO_1_IER
 
-    lda #%00010000 ; Set CB1 to positive going edge
+    lda #%00000001 ; Set CA1 to positive going edge
     sta IO_1_PCR
 
     stz IO_1_PORTA ; ensure all ports are 0
     stz IO_1_PORTB
 
-    lda #%00001111 ; Set bottom 4 pins of IO_1_PORTA to output
+    lda #%11111111 ; Set all pins of IO_1_PORTA to output
     sta IO_1_DDRA
 
-    lda #%11111111 ; Set all pins of IO_1_PORTB to output
+    lda #%00001111 ; Set bottom 4 pins of IO_1_PORTB to output
     sta IO_1_DDRB
 
     lda #%00000001 ; Clear display
@@ -191,23 +188,23 @@ irq:
     phx
     phy
 
-    lda #%00000000 ; PORT B is input
-    sta IO_1_DDRB
+    lda #%00000000 ; PORT A is input
+    sta IO_1_DDRA
 
     lda #KBS ; Enable shift register output
-    sta IO_1_PORTA
+    sta IO_1_PORTB
 
-    lda IO_1_PORTB ; read scan code into A register
+    lda IO_1_PORTA ; read scan code into A register
     pha
 
-    lda IO_1_PORTA ; read if the packet is valid
+    lda IO_1_PORTB ; read if the packet is valid
     pha
 
     lda #%00000000 ; disable shift register output
-    sta IO_1_PORTA
+    sta IO_1_PORTB
 
-    lda #%11111111 ; PORT B is output
-    sta IO_1_DDRB
+    lda #%11111111 ; PORT A is output
+    sta IO_1_DDRA
 
     pla
     and #KB_VALID
