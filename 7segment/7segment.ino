@@ -102,19 +102,19 @@ void loop() {
       }
     } 
     
-    // left digit
+    // right digit
     digit = value >> 4;
     PORTD=(zeroIn && digit == 0) ? 0 : font[digit];
-    
-    digitalWrite(PIN_LEFT_DIGIT, LOW);
-    delay(1);
-    digitalWrite(PIN_LEFT_DIGIT, HIGH);
-
-    // right digit
-    digit = value & 0b00001111;
-    PORTD=(zeroIn && value == 0) ? 0 : font[digit];
     
     digitalWrite(PIN_RIGHT_DIGIT, LOW);
     delay(1);
     digitalWrite(PIN_RIGHT_DIGIT, HIGH);
+
+    // left digit
+    digit = value & 0b00001111;
+    PORTD=(zeroIn && value == 0) ? 0 : font[digit];
+    
+    digitalWrite(PIN_LEFT_DIGIT, LOW);
+    delay(1);
+    digitalWrite(PIN_LEFT_DIGIT, HIGH);
 }
