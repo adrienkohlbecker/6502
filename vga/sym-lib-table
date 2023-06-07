@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name vga_sync-rescue)(type Legacy)(uri ${KIPRJMOD}/vga_sync-rescue.lib)(options "")(descr ""))
-)
