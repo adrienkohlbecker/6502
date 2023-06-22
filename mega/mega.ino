@@ -5,10 +5,11 @@
 
 U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0);
 
-const char ADDR[] = {22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52};
-const char DATA[] = {39, 41, 43, 45, 47, 49, 51, 53};
-#define CLOCK 2
-#define READ_WRITE 3
+const char ADDR[] = {30, 31, 32, 33, 34, 35, 36, 37, 29, 28, 27, 26, 25, 24, 23, 22};
+const char DATA[] = {42, 43, 44, 45, 46, 47, 48, 49};
+#define CLOCK 53
+#define SYNC 52
+#define READ_WRITE 51
 
 void setup() {
    u8g2.begin();
@@ -20,19 +21,27 @@ void setup() {
     pinMode(DATA[n], INPUT);
   }
   pinMode(CLOCK, INPUT);
+  pinMode(SYNC, INPUT);
   pinMode(READ_WRITE, INPUT);
 
-  attachInterrupt(digitalPinToInterrupt(CLOCK), onClock, RISING);
+  // enable pin change interrupt on clock
+  *digitalPinToPCICR(CLOCK) |= (1<<digitalPinToPCICRbit(CLOCK));
+  *digitalPinToPCMSK(CLOCK) |= (1<<digitalPinToPCMSKbit(CLOCK));
 
   Serial.begin(57600);
 }
 
 volatile unsigned int address = 0;
 volatile unsigned int data = 0;
-volatile unsigned int rw = 0;
+volatile bool rw = 0;
+volatile bool sync = 0;
 volatile bool triggered = false;
 
-void onClock() {
+ISR (PCINT0_vect) {
+  if (!digitalRead(CLOCK)) { // interrupt fires for both edges
+    return;
+  }
+  
   data = 0;
   address = 0;
 
@@ -47,6 +56,7 @@ void onClock() {
   }
 
   rw = digitalRead(READ_WRITE);
+  sync = digitalRead(SYNC);
   triggered = true;
 
 }
@@ -59,7 +69,7 @@ void loop() {
 
     noInterrupts();
     triggered = false;
-    sprintf(output, "%04x %c %02x", address,  rw ? 'r' : 'W', data);
+    sprintf(output, "%04x %c %02x %c", address,  rw ? 'r' : 'W', data, sync ? '*' : ' ');
     interrupts();
 
     Serial.println(output);
